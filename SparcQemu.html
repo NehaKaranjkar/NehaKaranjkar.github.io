@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="jemdoc.css" type="text/css" />
+<title></title>
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-category"><b>Bio</b></div>
+<div class="menu-item"><a href="index.html" class="current">Home</a></div>
+<div class="menu-item"><a href="Education.html">Education</a></div>
+<div class="menu-item"><a href="Experience.html">Experience</a></div>
+<div class="menu-item"><a href="Publications.html">Publications</a></div>
+<div class="menu-item"><a href="Awards.html">Awards</a></div>
+<div class="menu-item"><a href="OtherInterests.html">Other&nbsp;Interests</a></div>
+<div class="menu-category"><b>Projects</b></div>
+<div class="menu-item"><a href="Projects.html">Projects</a></div>
+<div class="menu-item"><a href="Tutorials.html">Tutorials</a></div>
+<div class="menu-category"><b>Resources</b></div>
+<div class="menu-item"><a href="Links.html">Resources&nbsp;&amp;&nbsp;Links</a></div>
+</td>
+<td id="layout-content">
+<h1><br />Compiling simple programs for a Sparc V8 target and running them on Qemu</h1>
+<p><br /></p>
+<p>This tutorial describes how to compile or assemble simple user-level programs 
+for a Sparc V8 target and step through their execution using Qemu and gdb. This tutorial assumes you're using linux.</p>
+<div class="infoblock">
+<div class="blockcontent">
+<p>We need:</p>
+<ol>
+<li><p>a cross compiler </p>
+</li>
+<li><p>an emulator to model a Sparc V8 machine </p>
+</li>
+<li><p>a debugger for stepping through program execution and examining registers or memory content</p>
+</li>
+</ol>
+</div></div>
+<h2>Cross Compiler</h2>
+<p>A cross compiler is needed when the machine on which the compiler is running (called the host)
+is of a different architecture (say x86) than the machine for which the executable is to be produced (called target, which is Sparc V8 in our case). The simplest way of obtaining a working cross compiler is to use <a href="http://buildroot.uclibc.org/">Buildroot</a>.
+<br /><br />
+<a href="http://buildroot.uclibc.org/download.html">Download</a> the latest buildroot tarball and untar it. Navigate to the untared buildroot directory and run the following commands:</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ make qemu_sparc_ss10_defconfig
+$ make menuconfig
+</pre></div></div>
+<p>This will open a graphical interface. Go to <tt>Toolchain&ndash;&gt;</tt> , scroll down and 
+select the option <tt> Build cross gdb for the host</tt> . We have selected this option because the default buildroot configuration for sparc V8 (called qemu_sparc_ss10_defconfig) does not include cross-gdb by default.  Save and exit the graphical interface. Now run make:</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ make
+</pre></div></div>
+<p>This will download and build required packages and can take a while. 
+At the end of make, we get a working cross compiler toolchain. 
+The binaries (sparc-linux-gcc, sparc-linux-as, sparc-linux-gdb etc) are present in folder: 
+<tt>&lt;path-to-buildroo&gt;/output/host/usr/bin</tt>.
+Add this location to your system's <a href="http://www.wikihow.com/Change-the-Path-Variable-in-Linux">PATH variable</a> to use the cross
+compiler binaries outside buildroot. </p>
+<h2>Compiling and Assembling a Program</h2>
+<p>Consider a simple assembly program Foo.s:</p>
+<div class="codeblock">
+<div class="blocktitle">Foo.s</div>
+<div class="blockcontent"><pre>
+.global _start
+_start:
+		  	  ! comments start with '!'
+	mov 2, %g1        !
+	mov 3, %g2        !
+	add %g1, %g2, %g3 ! g3 should now contain 5
+	nop
+	nop
+	nop
+</pre></div></div>
+<p>Assemble and link it to get an executable Foo. (The <tt>-g</tt> option is to include  debugging symbols in the generated executable).</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ sparc-linux-as -g -o Foo.o Foo.s
+$ sparc-linux-ld -g -o Foo   Foo.o
+</pre></div></div>
+<p>Instead of assembly, you can start with a simple C program Bar.c:</p>
+<div class="codeblock">
+<div class="blocktitle">Bar.c</div>
+<div class="blockcontent"><pre>
+<span class="builtin">int</span> a,b,c=0;
+<span class="builtin">int</span> main()
+{
+	a=2;
+	b=3;
+	c=a+b;
+	<span class="statement">return</span> 0;
+};
+</pre></div></div>
+<p>Compile, assemble and link it as follows.</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ sparc-linux-gcc -g -S      -o Bar.s Bar.c
+$ sparc-linux-as  -g         -o Bar.o Bar.s
+$ sparc-linux-ld  -g -e main -o Bar   Bar.o
+</pre></div></div>
+<p>The <tt>-e</tt> option points out location of the first executable instruction (the entry point) to the linker. We set the entry point to the function main() in our case. The disassembled instructions in Bar can be viewed using objdump utility </p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ sparc-linux-objdump -d -S Bar
+</pre></div></div>
+<h2>Running on Qemu with gdb</h2>
+<p>Install package qemu-user. This installs binaries for several targets, example qemu-alpha, qemu-mips, qemu-sparc.</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ sudo apt-get install qemu-user
+</pre></div></div>
+<p>In a terminal start qemu-sparc and set it up for remote debugging with gdb. </p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ qemu-sparc -g 1234 Foo
+</pre></div></div>
+<p>In another terminal, open gdb.</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+$ sparc-linux-gdb  Foo
+</pre></div></div>
+<p>Inside gdb, attach to qemu :</p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+(gdb) target remote :1234
+</pre></div></div>
+<p>In gdb, press <tt>s</tt> to step through assembly instructuctions. Use command <tt>info reg &lt;reg-name&gt;</tt> to examine register contents. </p>
+<div class="codeblock">
+<div class="blockcontent"><pre>
+(gdb) target remote :1234
+Remote debugging using :1234
+_start () at Foo.s:4
+4		mov 2, %g1        !
+(gdb) s
+5		mov 3, %g2        !
+(gdb) s
+6		add %g1, %g2, %g3 ! g3 should now contain 5
+(gdb) info reg g3
+g3             0x0	0
+(gdb) s
+7		nop
+(gdb) info reg g3
+g3             0x5	5
+(gdb)
+</pre></div></div>
+<p>Here are some useful tutorials on gdb:</p>
+<div class="infoblock">
+<div class="blockcontent">
+<ol>
+<li><p><a href="http://www.dirac.org/linux/gdb/">A comprehensive gdb tutorial</a></p>
+</li>
+<li><p><a href="http://www.csee.umbc.edu/~cpatel2/links/310/nasm/gdb_help.shtml">Using gdb for assembly Language Debugging</a></p>
+</li>
+</ol>
+</div></div>
+<p><br /><br /><br /><br />
+References:</p>
+<div class="infoblock">
+<div class="blockcontent">
+<ol>
+<li><p><a href="http://stackoverflow.com/questions/13706317/how-to-write-sparc-assembly-and-run-its-binary-in-qemu-or-simics">how to write sparc assembly and run its binary in qemu or simics</a></p>
+</li>
+<li><p><a href="http://buildroot.uclibc.org/downloads/manual/manual.html">buildroot manual</a></p>
+</li>
+</ol>
+</div></div>
+<div id="footer">
+<div id="footer-text">
+Page generated 2017-11-05 20:49:54 IST, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+</html>
