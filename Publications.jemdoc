@@ -1,0 +1,20 @@
+# jemdoc: menu{MENU}{index.html}
+= Publications
+
+==== Conference
+- An Approach to Discrete Parameter Design Space Exploration of Multi-core Systems using a Novel Simulation Based Interpolation Technique
+\n Neha V. Karanjkar and Madhav P. Desai
+\n /Proceedings of IEEE MASCOTS 2015/
+\n [./publications/NehaKaranjkar_MASCOTS.pdf \[pdf\]]
+
+==== Journal
+- On Continuous-space Embedding of Discrete-parameter Queuing Systems
+\n Neha V. Karanjkar, Madhav P. Desai
+\n (under review) arXiv:1606.02900, 2016
+\n [http://arxiv.org/abs/1606.02900 \[arXiv link\]]
+
+- Comments on "Improved Accuracy Pseudo-Exponential Function Generator With Applications in Analog Signal Processing"
+\n Neha V. Karanjkar, Rasmi R. Sahoo, and Maryam Shojaei Baghini
+\n /IEEE Transactions on VLSI Systems 18(9):1381-1383, 2010/
+\n [./publications/NehaKaranjkar_TVLSI.pdf \[pdf\]]
+

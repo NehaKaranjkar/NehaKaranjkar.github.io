@@ -1,0 +1,144 @@
+# jemdoc: menu{MENU}{index.html}
+
+
+= \nCompiling simple programs for a Sparc V8 target and running them on Qemu
+
+\n
+
+This tutorial describes how to compile or assemble simple user-level programs 
+for a Sparc V8 target and step through their execution using Qemu and gdb. This tutorial assumes you're using linux.
+
+~~~
+We need:
+. a cross compiler 
+. an emulator to model a Sparc V8 machine 
+. a debugger for stepping through program execution and examining registers or memory content
+~~~
+
+== Cross Compiler
+A cross compiler is needed when the machine on which the compiler is running (called the host)
+is of a different architecture (say x86) than the machine for which the executable is to be produced (called target, which is Sparc V8 in our case). The simplest way of obtaining a working cross compiler is to use [http://buildroot.uclibc.org/ Buildroot].
+\n\n
+[http://buildroot.uclibc.org/download.html Download ] the latest buildroot tarball and untar it. Navigate to the untared buildroot directory and run the following commands:
+
+~~~
+{}{bash}
+$ make qemu_sparc_ss10_defconfig
+$ make menuconfig
+~~~
+This will open a graphical interface. Go to +Toolchain-->+ , scroll down and 
+select the option + Build cross gdb for the host+ . We have selected this option because the default buildroot configuration for sparc V8 (called qemu_sparc_ss10_defconfig) does not include cross-gdb by default.  Save and exit the graphical interface. Now run make:
+~~~
+{}{bash}
+$ make
+~~~
+This will download and build required packages and can take a while. 
+At the end of make, we get a working cross compiler toolchain. 
+The binaries (sparc-linux-gcc, sparc-linux-as, sparc-linux-gdb etc) are present in folder: 
++<path-to-buildroo>\/output\/host\/usr\/bin+.
+Add this location to your system's [http://www.wikihow.com/Change-the-Path-Variable-in-Linux  PATH variable ] to use the cross
+compiler binaries outside buildroot. 
+
+== Compiling and Assembling a Program
+
+Consider a simple assembly program Foo.s:
+~~~
+{Foo.s}{Assembler}
+.global _start
+_start:
+		  	  ! comments start with '!'
+	mov 2, %g1        ! 
+	mov 3, %g2        ! 
+	add %g1, %g2, %g3 ! g3 should now contain 5
+	nop
+	nop
+	nop
+~~~
+Assemble and link it to get an executable Foo. (The +-g+ option is to include  debugging symbols in the generated executable).
+~~~
+{}{bash}
+$ sparc-linux-as -g -o Foo.o Foo.s
+$ sparc-linux-ld -g -o Foo   Foo.o
+~~~
+
+Instead of assembly, you can start with a simple C program Bar.c:
+~~~
+{Bar.c}{c}
+int a,b,c=0;
+int main()
+\{
+	a=2;
+	b=3;
+	c=a+b;
+	return 0;
+};
+~~~
+Compile, assemble and link it as follows.
+~~~
+{}{bash}
+$ sparc-linux-gcc -g -S      -o Bar.s Bar.c
+$ sparc-linux-as  -g         -o Bar.o Bar.s
+$ sparc-linux-ld  -g -e main -o Bar   Bar.o
+~~~
+
+The +-e+ option points out location of the first executable instruction (the entry point) to the linker. We set the entry point to the function main() in our case. The disassembled instructions in Bar can be viewed using objdump utility 
+~~~
+{}{bash}
+$ sparc-linux-objdump -d -S Bar
+~~~
+
+== Running on Qemu with gdb
+Install package qemu-user. This installs binaries for several targets, example qemu-alpha, qemu-mips, qemu-sparc.
+~~~
+{}{bash}
+$ sudo apt-get install qemu-user
+~~~
+In a terminal start qemu-sparc and set it up for remote debugging with gdb. 
+~~~
+{}{bash}
+$ qemu-sparc -g 1234 Foo
+~~~
+
+In another terminal, open gdb.
+~~~
+{}{bash}
+$ sparc-linux-gdb  Foo
+~~~
+Inside gdb, attach to qemu :
+~~~
+{}{bash}
+(gdb) target remote :1234
+~~~
+
+In gdb, press +s+ to step through assembly instructuctions. Use command +info reg <reg-name>+ to examine register contents. 
+~~~
+{}{bash}
+(gdb) target remote :1234
+Remote debugging using :1234
+_start () at Foo.s:4
+4		mov 2, %g1        !
+(gdb) s
+5		mov 3, %g2        !
+(gdb) s
+6		add %g1, %g2, %g3 ! g3 should now contain 5
+(gdb) info reg g3
+g3             0x0	0
+(gdb) s
+7		nop
+(gdb) info reg g3
+g3             0x5	5
+(gdb) 
+~~~
+Here are some useful tutorials on gdb:
+~~~
+. [http://www.dirac.org/linux/gdb/ A comprehensive gdb tutorial]
+. [http://www.csee.umbc.edu/~cpatel2/links/310/nasm/gdb_help.shtml Using gdb for assembly Language Debugging]
+~~~
+
+
+\n\n\n\n
+References:
+~~~
+. [http://stackoverflow.com/questions/13706317/how-to-write-sparc-assembly-and-run-its-binary-in-qemu-or-simics how to write sparc assembly and run its binary in qemu or simics  ]
+. [http://buildroot.uclibc.org/downloads/manual/manual.html buildroot manual]
+~~~

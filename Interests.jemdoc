@@ -1,0 +1,40 @@
+# jemdoc: menu{MENU}{index.html}
+
+== Some of my art work
+
+~~~
+{}{img_left}{./art/1.JPG}{Watercolor and ink}{200}{HEIGHTpx}
+# Portarit in watercolor and ink
+~~~
+
+
+~~~
+{}{img_left}{./art/2.JPG}{Color pencil and watercolor}{200}{HEIGHTpx}
+# Portrait using color pencil and watercolor
+~~~
+
+~~~
+{}{img_left}{./art/3.JPG}{Color pencil and watercolor}}{200}{HEIGHTpx}
+~~~
+
+~~~
+{}{img_left}{./art/4.JPG}{Poster colors, watercolor}{200}{HEIGHTpx}
+# Mountain lake, watercolor
+~~~
+
+~~~
+#{}{img_left}{./art/5.JPG}{}{200}{HEIGHTpx}
+#Clay model
+~~~
+
+~~~
+{}{img_left}{./art/7.JPG}{}{300}{HEIGHTpx}
+# Charcoal painting
+~~~
+
+~~~
+{}{img_left}{./art/8.JPG}{}{300}{HEIGHTpx}
+# Pencil sketch
+~~~
+
+

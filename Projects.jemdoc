@@ -1,0 +1,21 @@
+# jemdoc: menu{MENU}{index.html}
+= Open Source Projects
+
+
+==== Sitar (Simulation Tool for Architectural Research)\n
+[https://nehakaranjkar.github.io/sitar/ \[Project Webpage\]]\n
+
+Sitar is a tool for modeling and simulation of discrete time systems (such as discrete
+time queues, computer networks and computer architectural models). It consists of a
+system description language and a cycle-based simulation kernel. The language allows
+a system to be described in a hierarchical manner as an interconnection of modules
+running concurrently. The behavior of each module can be described in an imperative
+manner using constructs such as time-delays, conditional wait statements, fork-join
+concurrency, and branch\/loop constructs. C\+\+ code can be embedded in a module
+description in a straightforward and well-defined manner. The sitar language parser
+has been written using Antlr V3. The simulation kernel is lightweight, consisting of a
+small set of C\+\+ classes, and has been parallelized using OpenMP.
+
+
+
+
