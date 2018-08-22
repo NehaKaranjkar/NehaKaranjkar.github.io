@@ -1,8 +1,7 @@
 # jemdoc: menu{MENU}{index.html}
-= Tutorials
-
 \n
-\n
+== Tutorials
+\n 
  - [SparcQemu.html
   Compiling simple programs for a Sparc V8 target and running them on Qemu]
 

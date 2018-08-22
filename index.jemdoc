@@ -2,23 +2,33 @@
 = Neha Karanjkar
 
 ~~~
-{}{img_left}{./images/photo_8kB.jpg}{Neha Karanjkar}{170}
-*Post-doctoral Fellow* \n
-[http://www.rbccps.org Robert Bosch Centre for Cyber-physical Systems] \n
-[http://www.iisc.ac.in Indian Institute of Science, Bangalore]\n
-Bangalore 560012, India
-{{<p> <img src="./images/add_email.jpg" alt="" width="20" align="bottom">   neha [dot] karanjkar [at] gmail [dot] com </p> }}
+{}{img_left}{./images/photo_2_8kB.jpg}{Neha Karanjkar}{160}
+Hi. I am a post-doctoral fellow at the [http://www.rbccps.org Robert Bosch Centre for Cyber-Physical
+Systems], Indian Institute of Science, Bangalore. My current research interests are in modeling,
+simulation and optimization of discrete-event systems. I received my
+M.Tech and Ph.D degrees from the Electrical Engineering department at IIT Bombay in 2017.
 
 ~~~
 
 
 == Research Interests
-Computer architecture, Embedded systems,\n
-Discrete-event modeling and simulation, Stochastic Optimization
-\n\n
+Modeling, Simulation and Optimization of Discrete-event Systems\n
+==== Application Areas:
+- Computer Architecture, Embedded Systems
+- Simulation of Smart-City and Industrial Internet-of-Things (IoT)
 
-==== Profiles
 
-[https://github.com/NehaKaranjkar {{<img src="./images/GitHub_logo.png" alt="" height="30" align="bottom">}}  ]~~~ 
-[https://stackoverflow.com/users/1329325/neha-karanjkar?tab=profile {{<img src="./images/SO_logo.png" alt="" height="30" align="bottom">}} ]
+== Contact
+
+{{<p> <img src="./images/add_email.jpg" alt="" width="20" align="bottom">   neha [dot] karanjkar [at] gmail [dot] com </p> }}
+Robert Bosch Centre for Cyber-Physical Systems\n
+Third Floor, SID Building, \n
+Indian Institute of Science, \n
+Bengaluru, Karnataka 560012 \n
+
+
+== Profiles
+
+[https://github.com/NehaKaranjkar {{<img src="./images/GitHub_logo.png" alt="" height="30" align="bottom"> Github }}  ] ~~~~
+[https://stackoverflow.com/users/1329325/neha-karanjkar?tab=profile {{<img src="./images/SO_logo.png" alt="" height="30" align="bottom"> StackExchange}} ]
 

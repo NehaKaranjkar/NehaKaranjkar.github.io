@@ -1,0 +1,69 @@
+# jemdoc: menu{MENU}{index.html}
+
+\n
+== Education
+
+==== Post-graduation
+	- Integrated M.Tech \+ Ph.D\n
+	[https://www.ee.iitb.ac.in/web Department of Electrical Engineering], [http://www.iitb.ac.in/	IIT Bombay] \n
+	Thesis Advisor: [https://www.ee.iitb.ac.in/web/people/faculty/home/madhav Prof. Madhav P. Desai]\n
+	M.Tech Specialization: Microelectronics\n
+	Ph.D research area: Multi-core Design Optimization\n
+	#Thesis: A Continuous-space Embedding Approach to Discrete-parameter Optimization of Multi-core Systems
+	#[./publications/NehaKaranjkar_Thesis.pdf \[pdf\]]\n
+	2007 - 2017
+
+==== Undergraduate
+	- Bachelor of Engineering (B.E.)\n
+	Electronics and Telecommunications Engineering \n
+	Goa Engineering College, Goa University\n
+	2003 - 2007
+
+==== Secondary and Higher Secondary Schooling
+	- GVM's SNJA Higher Secondary School (Science stream) \n
+	and A.J.De Almeida High School, Ponda, Goa\n
+	1995 - 2003
+
+
+== Experience
+
+==== Post-doctoral fellow
+	
+	- [http://www.rbccps.org Robert Bosch Centre for Cyber-physical Systems] \n
+	[http://www.iisc.ac.in Indian Institute of Science, Bangalore]\n
+	Supervisor: [http://drona.csa.iisc.ernet.in/~shalabh/ Prof. Shalabh Bhatnagar]\n
+	Areas: Simulation in Smart-city and Industrial IoT Applications,\n
+	Simulation-based Optimization.\n
+	July 2017 - Current
+
+====  Member, Ajit processor development team, IIT Bombay.\n
+	
+	- The Ajit processor is a Sparc-V8 ISA compliant processor being\n 
+	developed at IIT Bombay. I was a student member (from 2014 - July 2016)\n
+	and a Project Research Scientist (till Dec 2016.) My main contribution was to port the \n
+	Linux kernel to the Ajit processor platform.\n
+	Project PI: Prof. Madhav Desai\n
+
+==== Teaching Assistant at IIT Bombay 
+	
+	- For the following courses:
+	-- VLSI Design (autumn 2012 , 2011)
+	-- System Design (spring 2010, 2011, 2012) 
+	-- Testing and Verification of VLSI systems (autumn 2010) 
+	-- Electronic Design Lab (spring 2008)
+	-- Microprocessor Lab (autumn 2008, 2009)
+
+== Awards / Achievements
+	
+	- Travel grant from the European Association of Artificial Intelligence (EurAI)
+		for attending the 2017 ACAI Summer School on Reinforcement Learning
+		in Nieuwpoort, Belgium (2017)
+	- Goa Scholars Scheme award: a merit-based scholarship of INR 4 Lakh
+	  awarded by the government of Goa for post graduate studies (2008)
+	- The university Gold medal for highest overall marks in Electronics and
+	  Telecommunications stream, Goa University (2007)
+	- Distinction in secondary and higher secondary school examinations (2001, 2003)
+	- First position in state-level mathematics competitive test (2001)
+	- Samraat award (best outgoing student award), A.J.De Almeida high school (2001)
+
+
