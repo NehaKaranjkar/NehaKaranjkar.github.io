@@ -20,10 +20,9 @@
 
 ==== A Framework for Simulation of the Device Layer in Smart City IoT Stacks
 
-	- This is a currently ongoing project at RBCCPS, IISc Bangalore. 
-	The aim of this project is to develop a scalable and flexible framework for the
-	simulation of the device layer in a smart-city environment for testing and validation
-	of the middleware and application layers.\n
+	- This is an ongoing project at RBCCPS (IISc Bangalore) with the aim 
+	of developing a scalable and flexible framework for the
+	simulation of the device layer in smart-city applications.\n
 	(August 2018 - present)
 
 ==== Discrete-event modeling for Industrial IoT applications
