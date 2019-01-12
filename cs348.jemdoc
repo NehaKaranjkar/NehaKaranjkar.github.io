@@ -1,0 +1,69 @@
+# jemdoc: menu{MENU}{index.html}
+\n
+== CS 348 Computer Networks (Spring 2019)
+\n
+=== Timings
+	- Tuesdays *10:30-11:25*, Venue: LH2 (GEC-Library Building)
+	- Wednesdays *9:30-10:25*, Venue: CL1 (New Acad Block)
+	- Fridays *8:30-9:25*, Venue: CL1 (New Acad Block)
+
+=== Textbook
+	- Kurose and Ross, Computer Networking: A Top-Down Approach (6th edition)
+=== References
+	- Tanenbaum and Wetherall, Computer Networks
+	- Fall and Stevens, TCP\/IP Illustrated, Volume 1
+
+=== Grading Scheme (6 credits)
+	- Assignment: 10\%
+	- Quiz 1: 10\%
+	- Midsem: 20\%
+	- Quiz 2: 10\%
+	- Endsem: 50\%
+
+=== Course Contents
+	
+~~~
+{}{table}{}
+*Lecture*  | *Date* | *Topics* ||
+1  | 15 Jan |     Introduction, Course Logistics, Layering abstraction||
+2  | 16 Jan | ||  # Packet Switching, Layering and Encapsulation
+3  | 18 Jan | ||  # Addressing at each layer, History of networking
+4  | 22 Jan | ||  # Performance
+5  | 23 Jan | ||  # The Application Layer: Introduction and socket programming
+6  | 25 Jan |  || # The Application Layer: HTTP
+7  | 29 Jan |  || # The Application Layer: DNS
+8  | 30 Jan | *Quiz 1* || 
+9  | 1 Feb |  ||   # The Application layer
+10  | 5 Feb |  ||  # The Application layer
+11  | 6 Feb |  ||  # Transport Layer
+12  | 8 Feb |  ||  # Transport Layer
+13  | 12 Feb |  || # Transport Layer  
+14  | 13 Feb |  || # Transport Layer  
+15  | 15 Feb |  || # 
+16  | 19 Feb |  || # Network Layer
+17  | 20 Feb |  || # Network Layer
+    | *Midsem Week* |  ||
+18  | 1 Mar |  ||  # Network Layer 
+19  | 5 Mar |  ||  # Network Layer 
+20  | 6 Mar |  ||  # Network Layer  
+21  | 8 Mar |  ||  # Network Layer  
+22  | 12 Mar |  || # 
+23  | 13 Mar |  || # Link Layer
+24  | 15 Mar |  || # Link Layer
+25  | 19 Mar |  || # Link Layer
+26  | 20 Mar |  || # 
+27  | 22 Mar |  || # 
+28  | 26 Mar |  || # Security
+29  | 27 Mar | *Quiz 2*  || 
+30  | 29 Mar |  || # Security
+31  | 2 Apr |  ||  # Security
+32  | 3 Apr |  ||  # Security
+33  | 5 Apr |  ||  # Security
+34  | 9 Apr |  ||
+35  | 10 Apr |  || # IoT
+36  | 12 Apr |  || # IoT
+37  | 16 Apr |  || # IoT
+38  | 17 Apr |  || # IoT
+39  | 19 Apr |  || # IoT
+    | *Endsem Week* |  
+~~~
