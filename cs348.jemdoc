@@ -25,45 +25,44 @@
 ~~~
 {}{table}{}
 *Lecture*  | *Date* | *Topics* ||
-1  | 15 Jan |     Introduction, Course Logistics, Layering abstraction||
-2  | 16 Jan | ||  # Packet Switching, Layering and Encapsulation
-3  | 18 Jan | ||  # Addressing at each layer, History of networking
-4  | 22 Jan | ||  # Performance
-5  | 23 Jan | ||  # The Application Layer: Introduction and socket programming
-6  | 25 Jan |  || # The Application Layer: HTTP
-7  | 29 Jan |  || # The Application Layer: DNS
-8  | 30 Jan | *Quiz 1* || 
-9  | 1 Feb |  ||   # The Application layer
-10  | 5 Feb |  ||  # The Application layer
-11  | 6 Feb |  ||  # Transport Layer
-12  | 8 Feb |  ||  # Transport Layer
-13  | 12 Feb |  || # Transport Layer  
-14  | 13 Feb |  || # Transport Layer  
-15  | 15 Feb |  || # 
-16  | 19 Feb |  || # Network Layer
-17  | 20 Feb |  || # Network Layer
+ 1  | 16 Jan |  || 
+ 2  | 18 Jan |  || 
+ 3  | 22 Jan |  || 
+ 4  | 23 Jan |  || 
+ 5  | 25 Jan |  || 
+ 6  | 29 Jan |  || 
+ 7  | 30 Jan |  || 
+ 8  | 1 Feb  |  || 
+ 9  | 5 Feb  | *Quiz 1* || 
+ 10 | 6 Feb  |  || 
+ 11 | 8 Feb  |  || 
+ 12 | 12 Feb |  || 
+ 13 | 13 Feb |  || 
+ 14 | 15 Feb |  || 
+ 15 | 19 Feb |  || 
+ 16 | 20 Feb |  || 
     | *Midsem Week* |  ||
-18  | 1 Mar |  ||  # Network Layer 
-19  | 5 Mar |  ||  # Network Layer 
-20  | 6 Mar |  ||  # Network Layer  
-21  | 8 Mar |  ||  # Network Layer  
-22  | 12 Mar |  || # 
-23  | 13 Mar |  || # Link Layer
-24  | 15 Mar |  || # Link Layer
-25  | 19 Mar |  || # Link Layer
-26  | 20 Mar |  || # 
-27  | 22 Mar |  || # 
-28  | 26 Mar |  || # Security
-29  | 27 Mar | *Quiz 2*  || 
-30  | 29 Mar |  || # Security
-31  | 2 Apr |  ||  # Security
-32  | 3 Apr |  ||  # Security
-33  | 5 Apr |  ||  # Security
-34  | 9 Apr |  ||
-35  | 10 Apr |  || # IoT
-36  | 12 Apr |  || # IoT
-37  | 16 Apr |  || # IoT
-38  | 17 Apr |  || # IoT
-39  | 19 Apr |  || # IoT
+ 17 | 1 Mar  |  ||  
+ 18 | 5 Mar  |  ||  
+ 19 | 6 Mar  |  ||  
+ 20 | 8 Mar  |  ||  
+ 21 | 12 Mar |  || 
+ 22 | 13 Mar |  || 
+ 23 | 15 Mar |  || 
+ 24 | 19 Mar |  || 
+ 25 | 20 Mar |  || 
+ 26 | 22 Mar |  || 
+ 27 | 26 Mar |  || 
+ 28 | 27 Mar |  *Quiz 2*  || 
+ 29 | 29 Mar |  || 
+ 30 | 2 Apr  |  || 
+ 31 | 3 Apr  |  || 
+ 32 | 5 Apr  |  || 
+ 33 | 9 Apr  |  ||
+ 34 | 10 Apr |  || 
+ 35 | 12 Apr |  || 
+ 36 | 16 Apr |  || 
+ 37 | 17 Apr |  || 
+ 38 | 19 Apr |  || 
     | *Endsem Week* |  
 ~~~
