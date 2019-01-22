@@ -25,9 +25,9 @@
 ~~~
 {}{table}{}
 *Lecture*  | *Date* | *Topics* ||
- 1  | Wednesday 16 Jan | Introduction, Course Logistics, Layering and Encapsulation [./348/Lec1.pdf \[slides\] ] || 
+ 1  | Wednesday 16 Jan | Introduction, Course Logistics, Layering and Encapsulation [./348/1.pdf \[slides\] ] || 
  2  | Friday 18 Jan | Survey Quiz, Recap, Addressing || 
- 3  | Tuesday 22 Jan |  || 
+ 3  | Tuesday 22 Jan | Services provided by each layer, Addressing [./348/2.pdf    \[slides\] ] || 
  4  | Wednesday 23 Jan |  || 
  5  | Friday 25 Jan |  || 
  6  | 29 Jan |  || 
