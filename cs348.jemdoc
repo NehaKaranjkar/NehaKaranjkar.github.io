@@ -28,8 +28,9 @@
  1  | Wednesday 16 Jan | Introduction and course Logistics, Layering and Encapsulation [./348/1.pdf \[slides\] ] || 
  2  | Friday 18 Jan | Survey Quiz, Recap of Layering, Addressing || 
  3  | Tuesday 22 Jan | Services provided by each layer,  Addressing [./348/2.pdf    \[slides\] ] || 
- 4  | Wednesday 23 Jan | History of the Internet, Performance metrics: Delays \n Reading Assignment: Sections 1.1 to 1.4 in Kurose and Ross  || 
- 5  | Friday 25 Jan |  || 
+ 4  | Wednesday 23 Jan | History of the Internet, Performance metrics: Delays \n Reading Assignment: Sections 1.1 to 1.4 in K&R || 
+ 5  | Friday 25 Jan | Performance Measures: Delays, Loss and Throughput (Section 1.4 in K&R) \n
+ How Traceroute works|| 
  6  | 29 Jan |  || 
  7  | 30 Jan |  || 
  8  | 1 Feb  |  || 
