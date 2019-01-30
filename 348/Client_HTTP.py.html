@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>~/Acad/Teaching/computernetworks.git/demos/Client_HTTP.py.html</title>
+<meta name="Generator" content="Vim/8.0">
+<meta name="plugin-version" content="vim7.4_v2">
+<meta name="syntax" content="python">
+<meta name="settings" content="number_lines,use_css,pre_wrap,no_foldcolumn,expand_tabs,line_ids">
+<style type="text/css">
+<!--
+pre { white-space: pre-wrap; font-family: monospace; color: #3f1f1f; background-color: #ffefd5; }
+body { font-family: monospace; color: #3f1f1f; background-color: #ffefd5; }
+.lnr { color: #a52a2a; background-color: #ffe4b5; }
+.Identifier { color: #005f5f; }
+.Special { color: #6a5acd; }
+.Constant { color: #ff1493; }
+.PreProc { color: #8b008b; }
+.Comment { color: #0000cd; }
+-->
+</style>
+</head>
+<body>
+<pre>
+<span class="lnr"> 1 </span><span class="Comment"># This is the client program</span>
+<span class="lnr"> 2 </span>
+<span class="lnr"> 3 </span><span class="Comment"># Sequence:</span>
+<span class="lnr"> 4 </span><span class="Comment">#</span>
+<span class="lnr"> 5 </span><span class="Comment"># 1. Create a socket</span>
+<span class="lnr"> 6 </span><span class="Comment"># 2. Connect it to the server process. </span>
+<span class="lnr"> 7 </span><span class="Comment">#   We need to know the server's hostname and port.</span>
+<span class="lnr"> 8 </span><span class="Comment"># 3. Send and receive data </span>
+<span class="lnr"> 9 </span>
+<span class="lnr">10 </span><span class="PreProc">import</span> socket
+<span class="lnr">11 </span>
+<span class="lnr">12 </span><span class="Comment"># create a socket</span>
+<span class="lnr">13 </span>s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+<span class="lnr">14 </span>    <span class="Comment"># The first argument should be AF_INET</span>
+<span class="lnr">15 </span>    <span class="Comment"># The second argument is SOCK_STREAM for TCP service</span>
+<span class="lnr">16 </span>    <span class="Comment">#    and SOCK_DGRAM for UDP service</span>
+<span class="lnr">17 </span>
+<span class="lnr">18 </span><span class="Comment"># connect to the server</span>
+<span class="lnr">19 </span>host=<span class="Constant">&quot;</span><span class="Constant">www.google.com</span><span class="Constant">&quot;</span>
+<span class="lnr">20 </span>port=<span class="Constant">80</span>  <span class="Comment"># this is the server's port number, which the client needs to know</span>
+<span class="lnr">21 </span>
+<span class="lnr">22 </span>s.connect((host,port))
+<span class="lnr">23 </span>
+<span class="lnr">24 </span><span class="Comment"># send an HTTP GET request</span>
+<span class="lnr">25 </span>s.send( <span class="Constant">&quot;</span><span class="Constant">GET / HTTP/1.1</span><span class="Special">\r\n</span><span class="Constant">Host: www.google.com</span><span class="Special">\r\n\r\n</span><span class="Constant">&quot;</span>)
+<span class="lnr">26 </span>
+<span class="lnr">27 </span><span class="Comment"># read a response</span>
+<span class="lnr">28 </span>response = s.recv(<span class="Constant">4096</span>)
+<span class="lnr">29 </span><span class="Identifier">print</span>(response)
+<span class="lnr">30 </span>
+<span class="lnr">31 </span>
+<span class="lnr">32 </span><span class="Comment"># close the connection</span>
+<span class="lnr">33 </span>s.close()
+</pre>
+</body>
+</html>
