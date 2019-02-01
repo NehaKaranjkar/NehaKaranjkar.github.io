@@ -33,7 +33,7 @@
  How Traceroute works|| 
  6  | Tuesday 29 Jan | Private Networks and NAT [./348/3.pdf \[slides\]], Introduction to the Application Layer || 
  7  | 30 Jan | *Socket Programming using Python*, and an introduction to Wireshark \n
-	 Demo code (TCP sockets): [./348/Server.py.html Server.py] and [./348/Client.py.html Client.py]\n 
+	 Demo code (TCP sockets): [./348/Server.py Server.py] and [./348/Client.py Client.py]\n 
 	 Demo code (UDP sockets): [./348/UDP_Server.py.html UDP_Server.py] and [./348/UDP_Client.py.html UDP_Client.py]\n
 	 Demo code (HTTP over a TCP socket): [./348/Client_HTTP.py.html Client_HTTP.py]\n
 	 [https://realpython.com/python-sockets/ Link] to a great online tutorial on socket programming ||
