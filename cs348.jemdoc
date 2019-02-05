@@ -25,26 +25,26 @@
 ~~~
 {}{table}{}
 *Lecture*  | *Date* | *Topics* ||
- 1  | Wednesday 16 Jan | Introduction and course Logistics, Layering and Encapsulation [./348/1.pdf \[slides\] ] || 
- 2  | Friday 18 Jan | Survey Quiz, Recap of Layering, Addressing || 
- 3  | Tuesday 22 Jan | Services provided by each layer,  Addressing [./348/2.pdf    \[slides\] ] || 
- 4  | Wednesday 23 Jan | History of the Internet, Performance metrics: Delays \n (Reading Assignment: Sections 1.1 to 1.4 in K&R) || 
- 5  | Friday 25 Jan | Performance Measures: Delays, Loss and Throughput (Section 1.4 in K&R) \n
+ 1  | 16 Jan | Introduction and course Logistics, Layering and Encapsulation [./348/1.pdf \[slides\] ] || 
+ 2  | 18 Jan | Survey Quiz, Recap of Layering, Addressing || 
+ 3  | 22 Jan | Services provided by each layer,  Addressing [./348/2.pdf    \[slides\] ] || 
+ 4  | 23 Jan | History of the Internet, Performance metrics: Delays \n (Reading Assignment: Sections 1.1 to 1.4 in K&R) || 
+ 5  | 25 Jan | Performance Measures: Delays, Loss and Throughput (Section 1.4 in K&R) \n
  How Traceroute works|| 
- 6  | Tuesday 29 Jan | Private Networks and NAT [./348/3.pdf \[slides\]], Introduction to the Application Layer || 
+ 6  | 29 Jan | Private Networks and NAT [./348/3.pdf \[slides\]], Introduction to the Application Layer || 
  7  | 30 Jan | *Socket Programming using Python*, and an introduction to Wireshark \n
 	 Demo code (TCP sockets): [./348/Server.py Server.py] and [./348/Client.py Client.py]\n 
 	 Demo code (UDP sockets): [./348/UDP_Server.py.html UDP_Server.py] and [./348/UDP_Client.py.html UDP_Client.py]\n
 	 Demo code (HTTP over a TCP socket): [./348/Client_HTTP.py.html Client_HTTP.py]\n
-	 [https://realpython.com/python-sockets/ Link] to a great online tutorial on socket programming ||
- 8  | 1 Feb  |  || 
- 9  | 5 Feb  |  || 
- 10 | 6 Feb  |  || 
- 11 | 8 Feb  |  || 
- 12 | 12 Feb |  || 
- 13 | 13 Feb |  || 
- 14 | 15 Feb |  || 
- 15 | 19 Feb |  || 
+	 [https://realpython.com/python-sockets/ Link] to an online tutorial on socket programming ||
+ 8  | 5 Feb  | *Quiz 1* || 
+ 9  | 6 Feb  | Recap || 
+ 10 | 8 Feb  |  || 
+ 11 | 12 Feb |  || 
+ 12 | 13 Feb |  || 
+ 13 | 15 Feb |  || 
+ 14 | 19 Feb |  || 
+ 15 | 20 Feb |  || 
  16 | 20 Feb |  || 
     | *Midsem Week* |  ||
  17 | 1 Mar  |  ||  
