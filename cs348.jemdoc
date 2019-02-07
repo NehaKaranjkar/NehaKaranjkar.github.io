@@ -25,20 +25,33 @@
 ~~~
 {}{table}{}
 *Lecture*  | *Date* | *Topics* ||
- 1  | 16 Jan | Introduction and course Logistics, Layering and Encapsulation [./348/1.pdf \[slides\] ] || 
- 2  | 18 Jan | Survey Quiz, Recap of Layering, Addressing || 
- 3  | 22 Jan | Services provided by each layer,  Addressing [./348/2.pdf    \[slides\] ] || 
- 4  | 23 Jan | History of the Internet, Performance metrics: Delays \n (Reading Assignment: Sections 1.1 to 1.4 in K&R) || 
- 5  | 25 Jan | Performance Measures: Delays, Loss and Throughput (Section 1.4 in K&R) \n
- How Traceroute works|| 
- 6  | 29 Jan | Private Networks and NAT [./348/3.pdf \[slides\]], Introduction to the Application Layer || 
+ 1  | 16 Jan |  Introduction and course Logistics\n
+				Layering and Encapsulation [./348/1.pdf \[slides\] ] || 
+
+ 2  | 18 Jan |  Survey Quiz\n
+			    Recap of Layering and Addressing || 
+
+ 3  | 22 Jan |  Services provided by each layer and the addressing scheme used at each layer [./348/2.pdf    \[slides\] ] || 
+
+ 4  | 23 Jan |  History of the Internet [https://www.youtube.com/watch?v=oIezCGjxV3A \[Link to Hari Balakrishnan's Lecture\]] \n
+				Performance metrics: Delays \n 
+				(Reading Assignment: Sections 1.1 to 1.4 in K&R) || 
+
+ 5  | 25 Jan |  Performance Measures: Delays, Loss and Throughput (Section 1.4 in K&R) \n
+				How Traceroute works|| 
+
+ 6  | 29 Jan |  Private Networks and NAT [./348/3.pdf \[slides\]]\n
+				Introduction to the Application Layer || 
  7  | 30 Jan | *Socket Programming using Python*, and an introduction to Wireshark \n
-	 Demo code (TCP sockets): [./348/Server.py Server.py] and [./348/Client.py Client.py]\n 
-	 Demo code (UDP sockets): [./348/UDP_Server.py.html UDP_Server.py] and [./348/UDP_Client.py.html UDP_Client.py]\n
-	 Demo code (HTTP over a TCP socket): [./348/Client_HTTP.py.html Client_HTTP.py]\n
-	 [https://realpython.com/python-sockets/ Link] to an online tutorial on socket programming ||
+	
+				 Demo code (TCP sockets): [./348/Server.py.html Server.py] and [./348/Client.py.html Client.py]\n 
+				 Demo code (UDP sockets): [./348/UDP_Server.py.html UDP_Server.py] and [./348/UDP_Client.py.html UDP_Client.py]\n
+				 Demo code (HTTP over a TCP socket): [./348/Client_HTTP.py.html Client_HTTP.py]\n
+				 [https://realpython.com/python-sockets/ Link] to an online tutorial on socket programming ||
+
  8  | 5 Feb  | *Quiz 1* || 
- 9  | 6 Feb  | Recap || 
+ 9  | 6 Feb  | Recap ||
+
  10 | 8 Feb  |  || 
  11 | 12 Feb |  || 
  12 | 13 Feb |  || 

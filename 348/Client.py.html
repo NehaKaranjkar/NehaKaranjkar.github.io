@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>~/Acad/Teaching/computernetworks.git/demos/Client.py.html</title>
+<title>~/Acad/Teaching/computernetworks.git/code/Client.py.html</title>
 <meta name="Generator" content="Vim/8.0">
 <meta name="plugin-version" content="vim7.4_v2">
 <meta name="syntax" content="python">
@@ -34,22 +34,22 @@ body { font-family: monospace; color: #3f1f1f; background-color: #ffefd5; }
 <span class="lnr">11 </span>
 <span class="lnr">12 </span><span class="Comment"># create a socket</span>
 <span class="lnr">13 </span>s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-<span class="lnr">14 </span>    <span class="Comment"># The first argument should be AF_INET</span>
+<span class="lnr">14 </span>    <span class="Comment"># The first argument AF_INET specifies the addressing family (IP addresses)</span>
 <span class="lnr">15 </span>    <span class="Comment"># The second argument is SOCK_STREAM for TCP service</span>
 <span class="lnr">16 </span>    <span class="Comment">#    and SOCK_DGRAM for UDP service</span>
 <span class="lnr">17 </span>
-<span class="lnr">18 </span><span class="Comment"># connect to the server</span>
-<span class="lnr">19 </span>host=<span class="Constant">'</span><span class="Constant">localhost</span><span class="Constant">'</span>
-<span class="lnr">20 </span>port=<span class="Constant">43387</span>  <span class="Comment"># this is the server's port number, which the client needs to know</span>
-<span class="lnr">21 </span>s.connect((host,port))
-<span class="lnr">22 </span>
-<span class="lnr">23 </span><span class="Comment"># send some bytes</span>
-<span class="lnr">24 </span>s.send(<span class="Constant">&quot;</span><span class="Constant">Knock knock..</span><span class="Constant">&quot;</span>)
-<span class="lnr">25 </span>
-<span class="lnr">26 </span><span class="Comment"># read a response</span>
-<span class="lnr">27 </span>response = s.recv(<span class="Constant">1024</span>)
-<span class="lnr">28 </span><span class="Identifier">print</span>(response)
-<span class="lnr">29 </span>
+<span class="lnr">18 </span>
+<span class="lnr">19 </span><span class="Comment"># connect to the server</span>
+<span class="lnr">20 </span>host=<span class="Constant">'</span><span class="Constant">localhost</span><span class="Constant">'</span>
+<span class="lnr">21 </span>port=<span class="Constant">43387</span>  <span class="Comment"># this is the server's port number, which the client needs to know</span>
+<span class="lnr">22 </span>s.connect((host,port))
+<span class="lnr">23 </span>
+<span class="lnr">24 </span><span class="Comment"># send some bytes</span>
+<span class="lnr">25 </span>s.send(<span class="Constant">&quot;</span><span class="Constant">Knock knock..</span><span class="Constant">&quot;</span>)
+<span class="lnr">26 </span>
+<span class="lnr">27 </span><span class="Comment"># read a response</span>
+<span class="lnr">28 </span>response = s.recv(<span class="Constant">1024</span>)
+<span class="lnr">29 </span><span class="Identifier">print</span>(response)
 <span class="lnr">30 </span>
 <span class="lnr">31 </span><span class="Comment"># close the connection</span>
 <span class="lnr">32 </span>s.close()
