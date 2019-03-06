@@ -61,16 +61,16 @@
 				[https://www.chromium.org/spdy/spdy-whitepaper \[whitepaper\]]
 				[https://www.usenix.org/system/files/conference/nsdi14/nsdi14-paper-wang_xiao_sophia.pdf \[another paper\]]
 				|| 
- 13 | 20 Feb |  || 
+ 13 | 20 Feb |  --- || 
     | *Midsem Week* |  ||
  14 | 1 Mar  | Midsem paper review ||  
- 15 | 5 Mar  |  ||  
- 16 | 6 Mar  |  ||  
- 17 | 8 Mar  |  ||  
- 18 | 12 Mar |  || 
- 19 | 13 Mar |  || 
- 20 | 15 Mar |  || 
- 21 | 19 Mar |  || 
+ 15 | 5 Mar  | The Transport Layer (Sections 3.1 to 3.3 in K&R) ||  
+ 16 | 6 Mar  | Principles of Reliable Data Transfer (Section 3.4 in K&R) ||  
+ 17 | 7 Mar  | (continued..) Principles of Reliable Data Transfer  ||  
+ 18 | 8 Mar |  || 
+ 19 | 12 Mar |  || 
+ 20 | 13 Mar |  || 
+ 21 | 15 Mar |  || 
  22 | 20 Mar |  || 
  23 | 22 Mar |  || 
  24 | 26 Mar |  || 
