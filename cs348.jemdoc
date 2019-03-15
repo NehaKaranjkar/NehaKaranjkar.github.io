@@ -70,23 +70,22 @@
  15 | 5 Mar  | The Transport Layer (Sections 3.1 to 3.3 in K&R) ||  
  16 | 6 Mar  | Principles of Reliable Data Transfer (Section 3.4 in K&R) ||  
  17 | 7 Mar  | (continued..) Principles of Reliable Data Transfer  ||  
- 18 | 8 Mar |   || 
- 19 | 12 Mar |  || 
- 20 | 13 Mar |  || 
- 21 | 15 Mar |  || 
- 22 | 20 Mar |  || 
- 23 | 22 Mar |  || 
- 24 | 26 Mar |  || 
- 25 | 27 Mar |  || 
- 26 | 29 Mar |  || 
- 27 | 2  Apr  |  || 
- 28 | 3  Apr  |  || 
- 29 | 5  Apr  |  || 
- 30 | 9  Apr  |  ||
- 31 | 10 Apr |  || 
- 32 | 12 Apr |  || 
- 33 | 16 Apr |  || 
- 34 | 17 Apr |  || 
- 35 | 19 Apr |  || 
-    | *Endsem Week* |  
+ 18 | 8 Mar  | (continued..) Principles of Reliable Data Transfer  || 
+ 19 | 13 Mar | Go-back N and Selective Repeat Protocols || 
+ 20 | 15 Mar | TCP (Section 3.5 in K&R) || 
+ 21 | 20 Mar |  || 
+ 22 | 22 Mar |  || 
+ 23 | 26 Mar |  || 
+ 24 | 27 Mar |  || 
+ 25 | 29 Mar |  || 
+ 26 | 2  Apr  |  || 
+ 27 | 3  Apr  |  || 
+ 28 | 5  Apr  |  || 
+ 29 | 9  Apr  |  ||
+ 30 | 10 Apr |  || 
+ 31 | 12 Apr |  || 
+ 32 | 16 Apr |  || 
+ 33 | 17 Apr |  || 
+ 34 | 19 Apr |  || 
+ 35 | *Endsem Week* |  
 ~~~
