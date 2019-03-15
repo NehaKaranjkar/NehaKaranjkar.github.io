@@ -11,6 +11,10 @@ In this lab, we will incrementally develop and simulate protocols for reliable t
 		
 === Template
 To get started, here is a template that contains models for the sending and receiving processes, the sender and receiver-side protocols, an unreliable channel, and a Testbench to connect these together and run the simulation. The names for the entities and their interfaces closely follows the terminology used in K&R.\n
+~~~
+{}{img_left}{./images/Template.jpg}{Template}{450}
+~~~
+
 	- Download all of the following files into a single folder:
 		-- [./378/ProtocolSimulationTemplate/Packet.py Packet.py]
 		-- [./378/ProtocolSimulationTemplate/TestPacket.py TestPacket.py]
@@ -23,7 +27,7 @@ To get started, here is a template that contains models for the sending and rece
 	- To understand the models, it is suggested to go through the code in the same order as the list above.
 
 === Problem Statement
-	Download the problem statement and instructions for the lab exercise here (pdf).
+	Download the problem statement and instructions for the lab exercise [./378/Lab4.pdf here] (pdf).
 
 == License
 Copyright (C) 2019 by Neha Karanjkar 
