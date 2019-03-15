@@ -1,0 +1,14 @@
+# jemdoc: menu{MENU}{index.html}
+\n
+== Simulation of Reliable Transport Protocols
+
+In this lab, we will incrementally develop and simulate protocols for reliable transport as described in Chapter 3 of the textbook by Kurose and Ross 6th ed. We will make use of [SimPY], a popular Python package for discrete-event simulations.
+
+=== Requirements
+	- Python3
+	- SimPy for Python3 [link] (Install using ~pip3 install simpy~)
+	- Check whether SimPy is installed, by 
+	
+=== A Template for Simulations
+To get started, download the following files which form model of a simple unreliable channel, and a simple ack-based protocol.
+
