@@ -17,42 +17,39 @@
 	- Powerpoint slides and interactive exercises for Kurose and Ross 6th ed. are available [http://www-net.cs.umass.edu/kurose-ross-ppt-6e/ here].
 
 === Grading Scheme (6 credits)
-	- Assignment: 10\%
-	- Quiz 1: 10\% 
-	- Midsem: 20\% 
-	- Quiz 2: 10\%
+	- Assignment: 10\% (completed)
+	- Quiz 1: 10\% (completed)
+	- Midsem: 20\% (completed)
+	- Quiz 2: 10\% 
 	- Endsem: 50\%
 
 === Course Contents
-	
+
 ~~~
 {}{table}{}
-*Lecture*  | *Date* | *Topics* ||
+*Lecture*  | *Date* | *Topic* ||
+    |        |  \n*Overview of Computer Networks and the Internet *||
  1  | 16 Jan |  Introduction and course Logistics\n
 				Layering and Encapsulation [./348/1.pdf \[slides\] ] || 
-
  2  | 18 Jan |  Survey Quiz\n
 			    Recap of Layering and Addressing || 
-
- 3  | 22 Jan |  Services provided by each layer and the addressing scheme used at each layer [./348/2.pdf    \[slides\] ] || 
-
+ 3  | 22 Jan |  Services provided by each layer, addressing scheme [./348/2.pdf    \[slides\] ] || 
  4  | 23 Jan |  History of the Internet [https://www.youtube.com/watch?v=oIezCGjxV3A \[Link to Hari Balakrishnan's Lecture\]] \n
 				Performance metrics: Delays \n 
 				(Reading Assignment: Sections 1.1 to 1.4 in K&R) || 
-
  5  | 25 Jan |  Performance Measures: Delays, Loss and Throughput (Section 1.4 in K&R) \n
 				How Traceroute works|| 
-
  6  | 29 Jan |  Private Networks and NAT [./348/3.pdf \[slides\]]\n
 				Introduction to the Application Layer || 
- 7  | 30 Jan | *Socket Programming using Python*, and an introduction to Wireshark \n
+    |        | \n *Application Layer* ||
+ 7  | 30 Jan | Socket Programming using Python, and an introduction to Wireshark \n
 	
 				 Demo code (TCP sockets): [./348/Server.py.html Server.py] and [./348/Client.py.html Client.py]\n 
 				 Demo code (UDP sockets): [./348/UDP_Server.py.html UDP_Server.py] and [./348/UDP_Client.py.html UDP_Client.py]\n
 				 Demo code (HTTP over a TCP socket): [./348/Client_HTTP.py.html Client_HTTP.py]\n
 				 [https://realpython.com/python-sockets/ Link] to an online tutorial on socket programming ||
 
- 8  | 5 Feb  | *Quiz 1* || 
+ 8  | 5 Feb  | \n *Quiz 1* || 
  9  | 6 Feb  | Recap ||
 
  10 | 8 Feb  | Socket Programming || 
@@ -64,28 +61,34 @@
 				[https://www.chromium.org/spdy/spdy-whitepaper \[whitepaper\]]
 				[https://www.usenix.org/system/files/conference/nsdi14/nsdi14-paper-wang_xiao_sophia.pdf \[another paper\]]
 				|| 
- 13 | 20 Feb |  --- || 
-    | *Midsem Week* |  ||
- 14 | 1 Mar  | Midsem paper review ||  
- 15 | 5 Mar  | The Transport Layer (Sections 3.1 to 3.3 in K&R) ||  
- 16 | 6 Mar  | Principles of Reliable Data Transfer (Section 3.4 in K&R) ||  
- 17 | 7 Mar  | (continued..) Principles of Reliable Data Transfer  ||  
- 18 | 8 Mar  | (continued..) Principles of Reliable Data Transfer  || 
- 19 | 13 Mar | Go-back N and Selective Repeat Protocols || 
- 20 | 15 Mar | TCP (Section 3.5 in K&R) || 
- 21 | 20 Mar |  || 
- 22 | 22 Mar |  || 
- 23 | 26 Mar |  || 
- 24 | 27 Mar |  || 
- 25 | 29 Mar |  || 
- 26 | 2  Apr  |  || 
- 27 | 3  Apr  |  || 
- 28 | 5  Apr  |  || 
- 29 | 9  Apr  |  ||
- 30 | 10 Apr |  || 
- 31 | 12 Apr |  || 
- 32 | 16 Apr |  || 
- 33 | 17 Apr |  || 
- 34 | 19 Apr |  || 
- 35 | *Endsem Week* |  
+    |  | \n*Midsem* ||
+ 13 | 1 Mar  | Midsem paper review ||  
+    |  | \n *Transport Layer* ||
+ 14 | 5 Mar  | Introduction to the Transport Layer (Sections 3.1 to 3.3 in K&R) ||  
+ 15 | 6 Mar  | Principles of Reliable Data Transfer (Section 3.4 in K&R) ||  
+ 16 | 7 Mar  | Principles of Reliable Data Transfer (..continued)) ||  
+ 17 | 8 Mar  | Principles of Reliable Data Transfer (..continued) || 
+ 18 | 13 Mar | Go-back N and Selective Repeat Protocols || 
+ 19 | 15 Mar | TCP (Section 3.5 in K&R) || 
+ 20 | 19 Mar | TCP (..continued) || 
+ 21 | 22 Mar | Principles of Congestion Control (Section 3.6) || 
+ 22 | 22 Mar (extra slot)| TCP Congestion Control (Section 3.7) || 
+    |  | \n *Network Layer* ||
+
+ 24 | 26 Mar | Network layer services, Router architecture || 
+ 25 | 27 Mar | IP (Internet Protocol) and Addressing || 
+ 26 | 29 Mar | Private Networks and NAT (recap) || 
+ 27 | 3  Apr  | IPv6; Routing Algorithms || 
+ 28 | 4  Apr  | \n *Quiz 2* || 
+ 29 | 5  Apr  | Routing Algorithms (..continued)  || 
+ 30 | 5  Apr (extra slot) | Routing in the Internet || 
+ 31 | 8  Apr (extra slot) | Routing in the Internet (..continued) || 
+ 32 | 9  Apr |Routing in the Internet (..continued) || 
+    | | \n *Link Layer* || 
+ 33 | 10  Apr  | Link Layer: Introduction, Error detection and correction || 
+ 34 | 12  Apr | Multiple Access Protocols || 
+ 35 | 16  Apr | LAN: addressing, ARP || 
+ 36 | 17 Apr |  || 
+ 37 | 19 Apr |  || 
+  | *Endsem Week* |  
 ~~~
