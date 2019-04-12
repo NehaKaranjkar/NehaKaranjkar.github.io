@@ -20,7 +20,7 @@
 	- Assignment: 10\% (completed)
 	- Quiz 1: 10\% (completed)
 	- Midsem: 20\% (completed)
-	- Quiz 2: 10\% 
+	- Quiz 2: 10\% (completed)
 	- Endsem: 50\%
 
 === Course Contents
@@ -78,17 +78,15 @@
  24 | 26 Mar | Network layer services, Router architecture || 
  25 | 27 Mar | IP (Internet Protocol) and Addressing || 
  26 | 29 Mar | Private Networks and NAT (recap) || 
- 27 | 3  Apr  | IPv6; Routing Algorithms || 
+ 27 | 3  Apr  | IPv6; Introduction to Routing Algorithms || 
  28 | 4  Apr  | \n *Quiz 2* || 
- 29 | 5  Apr  | Routing Algorithms (..continued)  || 
- 30 | 5  Apr (extra slot) | Routing in the Internet || 
- 31 | 8  Apr (extra slot) | Routing in the Internet (..continued) || 
- 32 | 9  Apr |Routing in the Internet (..continued) || 
-    | | \n *Link Layer* || 
- 33 | 10  Apr  | Link Layer: Introduction, Error detection and correction || 
- 34 | 12  Apr | Multiple Access Protocols || 
- 35 | 16  Apr | LAN: addressing, ARP || 
- 36 | 17 Apr |  || 
- 37 | 19 Apr |  || 
+ 29 | 5  Apr  | Routing Algorithms (Link State and Distance Vector) || 
+ 30 | 5  Apr (extra) | Routing Algorithms (..continued)  || 
+ 31 | 8  Apr  | Autonomous Systems, Exterior and Interior Gateway Protocols || 
+ 32 | 9  Apr | Routing in the Internet (..continued) || 
+ 33 | 12  Apr  | Routing in the Internet (..continued)\n
+ Interesting Link: [http://www.caida.org/research/topology/as_core_network/2017/ Visualization of the Internet topology] || 
+ 34 | 16 Apr |  || 
+ 35 | 18 Apr |  || 
   | *Endsem Week* |  
 ~~~
