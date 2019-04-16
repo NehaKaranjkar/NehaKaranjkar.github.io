@@ -72,7 +72,7 @@
  19 | 15 Mar | TCP (Section 3.5 in K&R) || 
  20 | 19 Mar | TCP (..continued) || 
  21 | 22 Mar | Principles of Congestion Control (Section 3.6) || 
- 22 | 22 Mar (extra slot)| TCP Congestion Control (Section 3.7) || 
+ 22 | 22 Mar (extra)| TCP Congestion Control (Section 3.7) || 
     |  | \n *Network Layer* ||
 
  24 | 26 Mar | Network layer services, Router architecture || 
@@ -86,7 +86,7 @@
  32 | 9  Apr | Routing in the Internet (..continued) || 
  33 | 12  Apr  | Routing in the Internet (..continued)\n
  Interesting Link: [http://www.caida.org/research/topology/as_core_network/2017/ Visualization of the Internet topology] || 
- 34 | 16 Apr |  || 
- 35 | 18 Apr |  || 
-  | *Endsem Week* |  
+    |  | \n *Link Layer* ||
+ 34 | 16 Apr | Overview of the link-layer functions, addressing and ARP, Multiple access protocols, course summary ||
+   |  |  *Endsem Week*   
 ~~~
