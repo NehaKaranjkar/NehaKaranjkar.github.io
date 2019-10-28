@@ -14,40 +14,44 @@
 
 	Simulation plays a critical role in the design, analysis and optimization
 	of complex systems in most engineering disciplines. This course focuses on
-	the simulation of discrete-event systems (that is, systems in which the
+	the simulation of Discrete-event systems (that is, systems in which the
 	state is assumed to change at discrete time-instants only, as opposed to a
-	continuously evolving system). Computer networks, manufacturing systems,
-	clocked digital circuits and queueing systems are some examples where
+	system where the state evolves continuously in time). 
+	Computer networks, manufacturing systems, clocked digital circuits
+	and inventory systems are some examples where 
 	discrete-event simulation is widely used.
 	
 	The objectives of this course are to help the student build a strong
 	intuition of how discrete-event simulation works, and to develop the
 	ability to model and simulate a given system effectively and interpret the
-	results correctly. The course will be heavily based on examples from
-	several application areas, and coding-based assignments will form a
-	significant component of the course. The course will make use of
-	Python's SimPy library.
+	results correctly. Programming-based assignments will form a significant
+	component of the course. The course will make use of Python's SimPy library.
 
 
-*Topics:* Introduction to models and simulation, types of simulation. Introduction to
-	Python's SimPy library using examples. Approaches to discrete-event
-	simulation. Review of basic probability theory and Markov chains. Random
-	number generation, Input-output analysis, Simulation use cases (queueing
-	networks, manufacturing systems, computer networks). Parallel and
-	distributed simulation.
+*Topics:* 
+	- Introduction to models and simulation, types of simulation. 
+	- Introduction to Python's SimPy library using examples. 
+	- Approaches to discrete-event simulation. 
+	- How SimPy works
+	- Review of basic probability theory and Markov chains. 
+	- Generation of Random Numbers and Random Variates
+	- Simulation-based estimation of performance measures
+	- Queueing models 
+	- Input modeling (fitting distributions to observed data)
+	- Examples and use-cases (computer networks, manufacturing systems etc).
+	- \[Optional\] Parallel and distributed simulation.
 
 === Prerequisites
-Basic probability theory, Python, C\+\+.
+	Basic probability theory, Familiarity with Python
 
 === References
-
 	- Discrete-Event System Simulation, 5th Edition, By: Jerry Banks, John S. Carson II, Barry L. Nelson, David M. Nicol
-	- Discrete-Event Simulation: A First Course, by Leemis and Park
-	- Parallel and Distributed Simulation Systems, by Richard Fujimoto
+	- Probability, Markov Chains, Queues, and Simulation, by William J. Stewart
 	- [https://simpy.readthedocs.io/en/latest/  SimPy Documentation]
+	- Parallel and Distributed Simulation Systems, by Richard Fujimoto
 
 === Evaluation Scheme (6 credits)
-	- Midsem exam: 30\% 
-	- Endsem exam: 50\%
+	- Mid-semester exam: 30\% 
+	- End-semester exam: 50\%
 	- Assignments (take-home and in-class): 20\% 
 

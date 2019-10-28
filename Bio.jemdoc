@@ -1,6 +1,32 @@
 # jemdoc: menu{MENU}{index.html}
 
 \n
+
+== Experience
+
+==== Post-doctoral fellow
+	- [http://www.rbccps.org Robert Bosch Centre for Cyber-physical Systems] \n
+	[http://www.iisc.ac.in Indian Institute of Science, Bangalore]\n
+	Supervisor: [http://drona.csa.iisc.ernet.in/~shalabh/ Prof. Shalabh Bhatnagar]\n
+	Areas: Simulation in Smart-city and Industrial IoT Applications,\n
+	Simulation-based Optimization.\n
+	July 2017 - Dec 2018
+
+====  Member, Ajit processor development team, IIT Bombay.\n
+	- The Ajit processor is a Sparc-V8 ISA compliant processor being\n 
+	developed at IIT Bombay. I was a student member (from 2014 - July 2016)\n
+	and a Project Research Scientist (till Dec 2016.) My main contribution was to port the \n
+	Linux kernel to the Ajit processor platform.\n
+	Project PI: Prof. Madhav Desai\n
+
+==== Teaching Assistant at IIT Bombay 
+	- For the following courses:
+	-- VLSI Design (autumn 2012 , 2011)
+	-- System Design (spring 2010, 2011, 2012) 
+	-- Testing and Verification of VLSI systems (autumn 2010) 
+	-- Electronic Design Lab (spring 2008)
+	-- Microprocessor Lab (autumn 2008, 2009)
+
 == Education
 
 ==== Post-graduation
@@ -25,33 +51,6 @@
 	1995 - 2003
 
 
-== Experience
-
-==== Post-doctoral fellow
-	
-	- [http://www.rbccps.org Robert Bosch Centre for Cyber-physical Systems] \n
-	[http://www.iisc.ac.in Indian Institute of Science, Bangalore]\n
-	Supervisor: [http://drona.csa.iisc.ernet.in/~shalabh/ Prof. Shalabh Bhatnagar]\n
-	Areas: Simulation in Smart-city and Industrial IoT Applications,\n
-	Simulation-based Optimization.\n
-	July 2017 - Dec 2018
-
-====  Member, Ajit processor development team, IIT Bombay.\n
-	
-	- The Ajit processor is a Sparc-V8 ISA compliant processor being\n 
-	developed at IIT Bombay. I was a student member (from 2014 - July 2016)\n
-	and a Project Research Scientist (till Dec 2016.) My main contribution was to port the \n
-	Linux kernel to the Ajit processor platform.\n
-	Project PI: Prof. Madhav Desai\n
-
-==== Teaching Assistant at IIT Bombay 
-	
-	- For the following courses:
-	-- VLSI Design (autumn 2012 , 2011)
-	-- System Design (spring 2010, 2011, 2012) 
-	-- Testing and Verification of VLSI systems (autumn 2010) 
-	-- Electronic Design Lab (spring 2008)
-	-- Microprocessor Lab (autumn 2008, 2009)
 
 == Awards / Achievements
 	
