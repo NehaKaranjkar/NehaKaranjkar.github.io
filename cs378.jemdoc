@@ -1,19 +1,34 @@
 # jemdoc: menu{MENU}{index.html}
 \n
-== CS 378 Computer Networks LAB (Spring 2019)
-\n
-=== Timings
-	- Fridays *15:00-17:55*, Venue: Computer Lab (IT Building)
+== Computer Networks LAB (CS 378) Spring 2020
 
-=== Structure
-	
+\n
+=== LAB Timings
+	- Thursday *2pm-5pm*, Venue: Computing Centre
+
+=== About This Course
+	- This is an undergraduate LAB accompanying cs 348 (Computer Networks). The goal of this 
+	lab is to understand and become familiar with common Networking tools, and be able to 
+	design, build, simulate and test some software components of computer networks such
+	as reliable data transfer protocols, routing algorithms and networked applications.
+
+=== Textbook
+	- Kurose and Ross, Computer Networking: A Top-Down Approach (6th edition)
+
+=== Grading Scheme for CS 378 LAB (3 credits)
+	- Lab exercises: 20\%
+	- Assignments or Project: 30\%
+	- Final Lab exam: 50\%
+
+=== Labs:
+	- Lab 1: Tools of the Trade (ping, Traceroute, Wireshark, nmap)
+	- Lab 2: Socket Programming
+	- Lab 3: The Web and HTTP, DNS
+	- Lab 4: Principles of Reliable Data Transfer (take-home Assignment) [./ProtocolSimulation.html Link] 
+	- Lab 5: Routing Algorithms 
+	- Lab 6: Routing Protocols
+
 ~~~
-{}{table}{}
-*Lab*  | *Date* | *Topics and Assignment* ||
-1  | 1 Feb  | Tools of the Trade: ip, ping, netstat and arp commands, Traceroute, Wireshark [./378/Lab1.pdf \[Lab Exercise\] ]||
-2  | 8 Feb  | Socket Programming [./378/Lab2.pdf \[Lab Exercise\]]  ||
-3  | 15 Feb | The Web and HTTP [./378/Lab3.pdf \[Lab Exercise\]] ||
-4  | 8 Mar  | *Assignment 1 for cs 348* ||
-5  | 15 Mar | Protocols for Reliable Data Transfer [./ProtocolSimulation.html \[Assignment Description\]] ||
- |  |  
-~~~ 
+Problem statements, rerefence material and notifications will be uploaded on the Google classroom page for cs 348.
+~~~
+
