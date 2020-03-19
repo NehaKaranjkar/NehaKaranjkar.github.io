@@ -21,9 +21,9 @@
 	- Final Lab exam: 50\%
 
 === Labs:
-	- Lab 1: Tools of the Trade (ping, Traceroute, Wireshark, nmap)
-	- Lab 2: Socket Programming
-	- Lab 3: The Web and HTTP, DNS
+	- Lab 1: Tools of the Trade (ping, Traceroute, Wireshark, nmap) [./378/Lab1.pdf Exercise (pdf)] 
+	- Lab 2: Socket Programming  [./378/Lab2.pdf Exercise (pdf)] 
+	- Lab 3: The Web and HTTP, DNS  [./378/Lab3.pdf Exercise (pdf)] 
 	- Lab 4: Principles of Reliable Data Transfer (take-home Assignment) [./ProtocolSimulation.html Link] 
 	- Lab 5: Routing Algorithms 
 	- Lab 6: Routing Protocols
