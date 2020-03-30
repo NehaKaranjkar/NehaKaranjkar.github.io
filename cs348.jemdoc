@@ -29,7 +29,28 @@
 	- Quiz 2: 5\%
 	- Student Presentations: 5\%
 
+== Video Lectures
+	- From Lecture 15 onwards: [https://www.youtube.com/playlist?list=PLwNrOutwUd7GEBAoWA7BqDsK1KaJps60a YouTube Playlist]
+
+== Lecture Slides
+	- L1 Introduction								  [./348/L1_Introduction.pdf							slides] 
+	- L2 Structure of the internet                    [./348/L2_Structure_of_the_internet.pdf               slides] 
+	- L3 Structure of the internet                    [./348/L3_Structure_of_the_internet.pdf               slides] 
+	- L4 Layering and Encapsulation                   [./348/L4_Layering_and_Encapsulation.pdf              slides] 
+	- L5 Layering and service model                   [./348/L5_Layering_and_service_model.pdf              slides] 
+	- L6 Performance of packet switched networks      [./348/L6_Performance_of_packet_switched_networks.pdf slides] 
+	- L7 Performance of packet switched networks      [./348/L7_Performance_of_packet_switched_networks.pdf slides] 
+	- L8 Packet switching vs circuit switching        [./348/L8_Packet_switching_vs_circuit_switching.pdf   slides] 
+	- L9 Application layer and Sockets                [./348/L9_Application_layer_and_Sockets.pdf           slides] 
+	- L10 Socket Programming                          [./348/L10_Socket_Programming.pdf                     slides] 
+	- L11 The Web                                     [./348/L11_The_Web.pdf                                slides] 
+	- L12 The Web and HTTP                            [./348/L12_The_Web_and_HTTP.pdf                       slides] 
+	- L13 DNS                                         [./348/L13_DNS.pdf                                    slides] 
+	- L14 Transport Layer                             [./348/L14_Transport_Layer.pdf                        slides] 
+	- L15 Reliable Data Transfer                      [./348/L15_Reliable_Data_Transfer.pdf                 slides]
+
+
 ~~~
-Lecture slides, rerefence material and notifications will be uploaded on the Google classroom page for cs 348.
+Class notifications, reading assignments and exams will be uploaded on the Google classroom page for cs 348.
 ~~~
 
