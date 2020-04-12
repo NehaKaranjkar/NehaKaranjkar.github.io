@@ -22,12 +22,16 @@
 	- Fall and Stevens, TCP\/IP Illustrated, Volume 1
 
 === Grading Scheme for CS 348 (6 credits)
-	- End-semester Exam: 50\%
-	- Mid-semester Exam: 30\%
-	- Assignment: 5\%
+~~~
+*NOTE: Grading Scheme has been changed due to Covid-19.* 
+~~~
+	
+	- Assignment 1: 5\%
 	- Quiz 1: 5\%
-	- Quiz 2: 5\%
-	- Student Presentations: 5\%
+	- Mid-semester Exam: 30\%
+	- Student Presentations: 10\%
+	- Assignment 2 (on Sliding Window Protocols): 10\%
+	- (Will be announced): 40\%
 
 == Video Lectures
 	- From Lecture 15 onwards: [https://www.youtube.com/playlist?list=PLwNrOutwUd7GEBAoWA7BqDsK1KaJps60a YouTube Playlist]
