@@ -1,0 +1,28 @@
+# jemdoc: menu{MENU}{index.html}
+\n
+== LAB 5: Sliding Window Protocols
+\n
+=== Introduction
+	In this lab, we will incrementally develop, simulate and explore two protocols for pipelined data transfer: the *Go-Back-N* protocol and the *Selective Repeat* protocol as described in Section 3.4 of the textbook "Computer Networks: A top-down approach" by Kurose and Ross (6th ed). 
+
+=== Requirements
+	- Python3 (version >3.2)
+	- [https://simpy.readthedocs.io/en/latest/ SimPy] (version >=3.0.10) for Python3.\n
+	- This lab assumes familiarity with the [ProtocolSimulation.html previous lab] on basic stop-and-wait protocols for reliable data transfer. It uses a slightly modified version of the template from the previous lab.
+		
+=== Template
+	You are provided with a simulation model for the Go-Back-N protocol which consists of the following Python files:
+		- [./378/Lab5/Packet.py Packet.py]
+		- [./378/Lab5/Channel.py Channel.py]
+		- [./378/Lab5/Applications.py Applications.py]
+		- [./378/Lab5/Protocol_rdt1.py Protocol_GBN.py]
+		- [./378/Lab5/Testbench.py Testbench.py]
+
+	- Download all of the following files into a single folder:
+	- Check if the simulation works by running the command + $ python3 Testbench.py+
+	- To understand the models, it is suggested to go through the code in the same order as the list above.
+
+=== Problem Statement
+	Download the problem statement and instructions for the lab exercise [./378/Lab5/Lab5.pdf here] (pdf).
+
+
