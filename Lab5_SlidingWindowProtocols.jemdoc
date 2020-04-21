@@ -15,7 +15,7 @@
 		- [./378/Lab5/Packet.py Packet.py]
 		- [./378/Lab5/Channel.py Channel.py]
 		- [./378/Lab5/Applications.py Applications.py]
-		- [./378/Lab5/Protocol_rdt1.py Protocol_GBN.py]
+		- [./378/Lab5/Protocol_GBN.py Protocol_GBN.py]
 		- [./378/Lab5/Testbench.py Testbench.py]
 
 	- Download all of the following files into a single folder:
