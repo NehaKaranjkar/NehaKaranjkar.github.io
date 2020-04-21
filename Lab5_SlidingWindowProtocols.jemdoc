@@ -5,6 +5,10 @@
 === Introduction
 	In this lab, we will incrementally develop, simulate and explore two protocols for pipelined data transfer: the *Go-Back-N* protocol and the *Selective Repeat* protocol as described in Section 3.4 of the textbook "Computer Networks: A top-down approach" by Kurose and Ross (6th ed). 
 
+=== Video Tutorial
+	A short video tutorial for this Lab [https://www.youtube.com/watch?v=FxvM5naY3zQ&feature=youtu.be YouTube Link]
+	
+	
 === Requirements
 	- Python3 (version >3.2)
 	- [https://simpy.readthedocs.io/en/latest/ SimPy] (version >=3.0.10) for Python3.\n
