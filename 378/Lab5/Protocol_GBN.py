@@ -74,22 +74,38 @@ class rdt_Sender(object):
 		# when an ACK packet arrives
 		
 		if (packt.corrupted==False):
-			print("TIME:",self.env.now,"RDT_SENDER: got an ACK",packt.seq_num)
+			
 			
 			# check if we got an ACK for a packet within the current window.
 			if(packt.seq_num in self.sndpkt.keys()):
 				
-				# this packet can now be removed from the sender's buffer.
-				del self.sndpkt[packt.seq_num]
+				# Since this is a cumulative acknowledgement,
+				# all unacknowledged packets that were sent so far up-to 
+				# the acknowledged sequence number can be treated as already acked, 
+				# and removed from the buffer.
+				
+				while (self.base!=packt.seq_num):
+					# remove packet from buffer
+					# and slide the window right
+					del self.sndpkt[self.base]
+					self.base = (self.base + 1)%self.K
 
-				# update the base pointer to slide the window right by one position
-				self.base = (packt.seq_num + 1)%self.K
-
+				assert(self.base==packt.seq_num)
+				# remove the acked packet from buffer
+				# and slide the window right
+				del self.sndpkt[self.base]
+				self.base = (self.base + 1)%self.K
+				
+				# if there are no more packets to be acked, stop the timer.
 				if(self.base==self.nextseqnum):
 					self.stop_timer() # no more pending ACKs. Just stop the timer.
 				else:
-					self.restart_timer() # restart the timer, for a pending ACK of the next packet at base
+					self.restart_timer() # restart the timer, for a pending ACK of packet at base
 				
+				# exit the while loop
+				print("TIME:",self.env.now,"RDT_SENDER: Got an ACK",packt.seq_num,". Updated window:", [(self.base+i)%self.K for i in range(0,self.N)],"base =",self.base,"nextseqnum =",self.nextseqnum)
+			else:
+				print("TIME:",self.env.now,"RDT_SENDER: Got an ACK",packt.seq_num," for a packet in the old window. Ignoring it.")
 
 	# Finally, these functions are used for modeling a Timer's behavior.
 	def timer_behavior(self):
