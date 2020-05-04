@@ -30,3 +30,8 @@
 	Download the problem statement and instructions for the lab exercise [./378/Lab5/Lab5.pdf here] (pdf).
 
 
+\n
+==== A Note on Channel Utilization 
+When a packet is being transmitted, the channel remains busy for some amount time equal to the "transmission_delay" for the packet. After it has been transmitted, the packet reaches the other end after "propagation delay" amount of time. In the simulation model, the propagation delay has been modeled in the behavior but the transmission delay is taken into account only for calculating the total channel utilization. We haven't really modelled the behavior where the channel remains "busy" for transmission_delay amount of time and no new packet can be transmitted while the channel is busy. This is a little bit like cheating but has been done intentionally to keep the model simple and easy to understand, closely resembling the simple FSM description in the number of states. The state machine would have been much more complex otherwise, requiring us to introduce several new states when the channel is busy, and to also define the actions when some events happen while the channel is busy. 
+
+Thus, the model closely matches reality when the channel utilization is less than 100\% and at other times it helps us detect when there is over-utilization so that we can adjust the protocol parameters accordingly. So, for the optimization problem in the lab exercise, you should choose parameter values such that the channel utilization is below 100\%. In q3(a), You may ignore the impact of transmission time into the calculation of the total time to transmit 1000 packets (T), as this may not be a large component when the utilization is small.
