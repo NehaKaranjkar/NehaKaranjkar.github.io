@@ -42,6 +42,9 @@
 	- L14 Transport Layer                             [./348/L14_Transport_Layer.pdf                        slides] 
 	- L15 Reliable Data Transfer                      [./348/L15_Reliable_Data_Transfer.pdf                 slides]
 	- L16 Sliding Window Protocols                    [./348/L16_Sliding_Window_Protocols.pdf               slides]
+	- L17 TCP	(Ref: Section 3.5)                    [./348/L17_TCP.pdf                                    slides]
+	- L18 Congestion control (Ref: Sections 3.6, 3.7)#[./348/L18_Congestion_control.pdf                     slides]
+	- L19 The Network Layer                          #[./348/L18_Congestion_control.pdf                     slides]
 
 
 ~~~
