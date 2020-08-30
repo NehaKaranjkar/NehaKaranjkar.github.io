@@ -2,11 +2,10 @@
 \n
 == Teaching
 
-=== Current Courses
-==== Spring (Jan-May) 2020
+=== Current Courses 
 
-	- [cs348.html CS 348 Computer Networks (UG core course)]
-	- [cs378.html CS 378 Computer Networks Lab (UG core course)]
+==== Autumn (Sept-Dec) 2020
+	- [cs210.html CS 210 Digital Systems Design (UG core course)]
 
 ~~~
 {}{raw}
@@ -14,7 +13,11 @@
 ~~~
 
 ===  Past Courses 
-	
+==== Spring (Jan-June) 2020
+
+	- [cs348.html CS 348 Computer Networks (UG core course)]
+	- [cs378.html CS 378 Computer Networks Lab (UG core course)]
+
 ==== Autumn (July-Nov) 2019
 	- [cs572.html CS 572 Modeling and Simulation of Systems (Elective for UG, PG)] 
 	- CS 305 Computer Architecture (UG core course, Co-taught with Dr. Sharad Sinha)

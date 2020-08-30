@@ -1,0 +1,33 @@
+# jemdoc: menu{MENU}{index.html}
+\n
+== CS 210 Digital Systems Design (Autumn 2020)
+
+\n
+This is a core course for second-year undergraduate 
+students in Computer Science and Engineering.\n
+The course will be conducted in an online, 
+flipped-classroom mode.
+
+- Course Credits: 4
+- Lectures: 3 hours a week 
+- Lab: 3 hours a week
+
+=== Timings
+	- Monday 9:00 - 10:00 
+	- Tuesday 4:30 - 5:30 (*live interaction*)
+	- Wednesday 4:30 - 5:30
+	- Friday 9:00 - 10:00 (*live interaction - Lab*)
+	- Saturday 9:00 - 11:00 (Lab)
+
+=== Course Textbook
+	- Digital Design with an introduction to the Verilog HDL (5th edition or 6th edition)\n
+	by M. Morris Mano and Michael Ciletti
+
+=== Reference Book 
+	- Digital Design: Principles And Practices (4th Edition)\n
+	by John F. Wakerly
+
+~~~
+The course will use Google Classroom for all class notifications and discussion.
+~~~
+
