@@ -32,17 +32,16 @@ Google Classroom will be used for all class notifications and discussion.
 === Course Textbooks
 	- Digital Design with an introduction to the Verilog HDL (5th edition or 6th edition)\n
 	by M. Morris Mano and Michael Ciletti
-	- Verilog HDL\n
-	by Sameer Palnitkar
+	- VHDL: Programming by Example\n
+	by Douglas Perry
 
 === Reference Books 
 	- Digital Design: Principles And Practices (4th Edition)\n
 	by John F. Wakerly
-	- VHDL: Programming by Example\n
-	by Douglas Perry
 	- The VHDL Cookbook\n
 	by Peter J. Ashenden (Online book freely available [https://www.ics.uci.edu/~alexv/154/VHDL-Cookbook.pdf here])
-
+	- Verilog HDL\n
+	by Sameer Palnitkar
 
 === Course Contents and Lecture Plan
 	- Module 1: Introduction to the design of Digital Systems: the What, Why and How (Week 1)
