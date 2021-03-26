@@ -1,0 +1,41 @@
+# jemdoc: menu{MENU}{index.html}
+\n
+== LAB: Principles of Reliable Data Transfer
+
+\n
+=== Introduction
+In this lab, we will incrementally develop, simulate and test protocols for reliable transport as described in Chapter 3 of the textbook "Computer Networks: A top-down approach" by Kurose and Ross (6th ed). We will make use of [https://simpy.readthedocs.io/en/latest/ SimPy], a popular open-source Python package for discrete-event simulations. For understanding the principles behind these protocols, please refer to Section 3.4 in the textbook. 
+
+=== Video Tutorial (YouTube)
+	The video tutorial for this lab is uploaded in three parts: 
+	[https://youtu.be/rA545Xb39ww part 1,]
+	[https://youtu.be/VfqefseofLQ part 2,]
+	[https://youtu.be/pA04WjvI-GQ part 3]
+
+
+=== Requirements
+	- Python3 (version >3.2)
+	- [https://simpy.readthedocs.io/en/latest/ SimPy] (version >=3.0.10) for Python3.\n
+	In Linux, this can be installed using the command + $ pip3 install simpy +. You can check if you have the correct version installed, using the following command (for Linux): + $ python3 -c "import simpy; print(simpy.__version__)" +. It should output the current version of SimPy (for example "3.0.10")
+		
+=== Template
+To get started, here is a template that contains models for the sending and receiving processes, the sender and receiver-side transport-layer protocols, an unreliable channel, and a Testbench to connect these together and run the simulation. The names for the entities and their interfaces closely follows the terminology used in the textbook.\n
+~~~
+{}{img_left}{./images/Template.jpg}{Template}{450}
+~~~
+
+	- Download all of the following files into a single folder:
+		-- [./CS212/ProtocolSimulationTemplate/Packet.py Packet.py]
+		-- [./CS212/ProtocolSimulationTemplate/TestPacket.py TestPacket.py]
+		-- [./CS212/ProtocolSimulationTemplate/Applications.py Applications.py]
+		-- [./CS212/ProtocolSimulationTemplate/Channel.py Channel.py]
+		-- [./CS212/ProtocolSimulationTemplate/Protocol_rdt1.py Protocol_rdt1.py]
+		-- [./CS212/ProtocolSimulationTemplate/Protocol_rdt2.py Protocol_rdt2.py]
+		-- [./CS212/ProtocolSimulationTemplate/Testbench.py Testbench.py]
+	- Check if the simulation works by running the command + $ python3 Testbench.py+
+	- To understand the models, it is suggested to go through the code in the same order as the list above.
+
+=== Problem Statement
+	Download the problem statement and instructions for the lab exercise [./CS212/Lab3.pdf here] (pdf).
+
+
