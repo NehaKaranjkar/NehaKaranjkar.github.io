@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="jemdoc.css" type="text/css" />
+<title></title>
+</head>
+<body>
+<table summary="Table for page layout." id="tlayout">
+<tr valign="top">
+<td id="layout-menu">
+<div class="menu-item"><a href="index.html" class="current"><b>Home</b></a></div>
+<div class="menu-item"><a href="Bio.html">Bio</a></div>
+<div class="menu-item"><a href="Research.html">Research</a></div>
+<div class="menu-item"><a href="Teaching.html">Teaching</a></div>
+<div class="menu-item"><a href="Links.html">Resources</a></div>
+</td>
+<td id="layout-content">
+<p><br /></p>
+<h2>LAB: Sliding Window Protocols</h2>
+<p><br /></p>
+<h3>Introduction</h3>
+<p>The previous lab exercise was about simulation of basic stop-and-wait
+protocols for reliable data transfer (<a href="ProtocolSimulation.html">link</a>).  In
+this lab, we will incrementally develop, simulate and explore two protocols
+for pipelined data transfer: the <b>Go-Back-N</b> protocol and the <b>Selective
+Repeat</b> protocol as described in Section 3.4 of the textbook &ldquo;Computer
+Networks: A top-down approach&rdquo; by Kurose and Ross (6th ed). </p>
+<h3>Video Tutorial</h3>
+<p>A short video tutorial for this Lab <a href="https://www.youtube.com/watch?v=FxvM5naY3zQ&amp;feature=youtu.be">YouTube Link</a></p>
+<h3>Requirements</h3>
+<ul>
+<li><p>Python3 (version &gt;3.2)</p>
+</li>
+<li><p><a href="https://simpy.readthedocs.io/en/latest/">SimPy</a> (version &gt;=3.0.10) for Python3.<br /></p>
+</li>
+<li><p>This lab assumes familiarity with the <a href="ProtocolSimulation.html">previous lab</a> on basic stop-and-wait protocols for reliable data transfer. It uses a slightly modified version of the template from the previous lab.</p>
+</li>
+</ul>
+<h3>Template</h3>
+<p>You are provided with a simulation model for the Go-Back-N protocol which consists of the following Python files:</p>
+<ul>
+<li><p><a href="./CS212/SlidingWindowProtocols/Packet.py">Packet.py</a></p>
+</li>
+<li><p><a href="./CS212/SlidingWindowProtocols/Channel.py">Channel.py</a></p>
+</li>
+<li><p><a href="./CS212/SlidingWindowProtocols/Applications.py">Applications.py</a></p>
+</li>
+<li><p><a href="./CS212/SlidingWindowProtocols/Protocol_GBN.py">Protocol_GBN.py</a></p>
+</li>
+<li><p><a href="./CS212/SlidingWindowProtocols/Testbench.py">Testbench.py</a></p>
+</li>
+</ul>
+<ul>
+<li><p>Download all of the following files into a single folder:</p>
+</li>
+<li><p>Check if the simulation works by running the command <tt> $ python3 Testbench.py</tt></p>
+</li>
+<li><p>To understand the models, it is suggested to go through the code in the same order as the list above.</p>
+</li>
+</ul>
+<h3>Problem Statement</h3>
+<p>Download the problem statement and instructions for the lab exercise <a href="./CS212/Lab4.pdf">here</a> (pdf).</p>
+<p><br /></p>
+<h4>A Note on Channel Utilization </h4>
+<p>When a packet is being transmitted, the channel remains busy for some amount time equal to the &ldquo;transmission_delay&rdquo; for the packet. After it has been transmitted, the packet reaches the other end after &ldquo;propagation delay&rdquo; amount of time. In the simulation model, the propagation delay has been modeled in the behavior but the transmission delay is taken into account only for calculating the total channel utilization. We haven't really modelled the behavior where the channel remains &ldquo;busy&rdquo; for transmission_delay amount of time and no new packet can be transmitted while the channel is busy. This is a rough approximation and has been done to keep the model simple and easy to understand, closely resembling the simple FSM description in the number of states. The state machine would have been much more complex otherwise, requiring us to introduce several new states when the channel is busy, and to also define the actions when some events happen while the channel is busy. </p>
+<p>Thus, the model closely matches reality when the channel utilization is less than 100% and at other times it helps us detect when there is over-utilization so that we can adjust the protocol parameters accordingly. So, for the optimization problem in the lab exercise, you should choose parameter values such that the channel utilization is below 100%. In q3(a), You may ignore the impact of transmission time into the calculation of the total time to transmit 1000 packets (T), as this may not be a large component when the utilization is small.</p>
+<div id="footer">
+<div id="footer-text">
+Page generated 2021-04-20 17:43:10 IST, by <a href="http://jemdoc.jaboc.net/">jemdoc</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+</body>
+</html>

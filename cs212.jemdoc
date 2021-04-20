@@ -31,6 +31,7 @@
 	- Lab 1: IP, Ping, Traceroute and Wireshark [./CS212/Lab1.pdf Exercise (pdf)] 
 	- Lab 2: Socket Programming  [./CS212/Lab2.pdf Exercise (pdf)] 
 	- Lab 3: Principles of Reliable Data Transfer [./ProtocolSimulation.html Link] 
+	- Lab 4: Sliding Window Protocols [./SlidingWindowProtocols.html Link] 
 
 	#- Lab 5: Sliding Window Protocols (take-home Assignment) [./Lab5_SlidingWindowProtocols.html Link] 
 	#- Lab 6: Wireshark Lab on TCP [./378/Lab6.pdf (pdf)] (Source: [http://gaia.cs.umass.edu/kurose_ross/wireshark.htm authors' website])
