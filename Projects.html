@@ -4,6 +4,7 @@
 <head>
 <meta name="generator" content="jemdoc, see http://jemdoc.jaboc.net/" />
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" href="jemdoc.css" type="text/css" />
 <title></title>
 </head>
@@ -11,72 +12,20 @@
 <table summary="Table for page layout." id="tlayout">
 <tr valign="top">
 <td id="layout-menu">
-<div class="menu-item"><a href="index.html" class="current"><b>Home</b></a></div>
+<div class="menu-item"><a href="index.html">Home</a></div>
 <div class="menu-item"><a href="Bio.html">Bio</a></div>
+<div class="menu-item"><a href="Research.html" class="current">Research</a></div>
 <div class="menu-item"><a href="Publications.html">Publications</a></div>
-<div class="menu-item"><a href="Projects.html">Projects</a></div>
 <div class="menu-item"><a href="Teaching.html">Teaching</a></div>
-<div class="menu-item"><a href="TalksWorkshops.html">Talks&nbsp;&amp;&nbsp;Workshops</a></div>
-<div class="menu-item"><a href="Links.html">Resources&nbsp;&amp;&nbsp;Links</a></div>
+<div class="menu-item"><a href="TalksWorkshops.html">Talks</a></div>
+<div class="menu-item"><a href="Links.html">Learning&nbsp;Resources</a></div>
+<div class="menu-item"><a href="Personal.html">Personal</a></div>
 </td>
 <td id="layout-content">
 <p><br /></p>
-<h2>Current Research Areas</h2>
-<h3>Approches and Frameworks for Parallel Discrete-event and Cycle Based Simulation</h3>
-<p><b>Sitar (Simulation Tool for Architectural Research)</b><br />
-<a href="https://sitar-sim.github.io/sitar/">[Project Webpage]</a>&nbsp; &nbsp;
-<a href="https://github.com/sitar-sim/sitar/">[Project GitHub Repo]</a><br /></p>
-<p>Sitar is a framework for modeling and parallel simulation of synchronous discrete-event systems (such as discrete
-time queues, computer networks and computer architectural models). It consists of a
-system description language and a cycle-based simulation kernel that uses a unique, easy-to-parallelize
-two-phase execution approach. The language allows a system to be described in 
-a hierarchical manner as an interconnection of modules
-running concurrently. The behavior of each module can be described in an imperative
-manner using constructs such as time-delays, conditional wait statements, fork-join
-concurrency, and branch/loop constructs. C++ code can be embedded in a module
-description in a straightforward and well-defined manner. The sitar language parser
-has been written using Antlr V3. The simulation kernel is lightweight, consisting of a
-small set of C++ classes, and has been parallelized using OpenMP. 
-Sitar received the best paper award at SIMULTECH2022 conference.</p>
-<table class="imgtable"><tr><td>
-<img src="./images/Sitar.png" alt="Sitar Simulation Framework" width="400px" height="https://sitar-sim.github.io/sitar" />&nbsp;</td>
-<td align="left"></td></tr></table>
-<h3>Approches for efficient simulation of Hybrid (mixed discrete-event and continuous) systems</h3>
-<p>We are developing efficient approaches and open frameworks for hybrid simulation of systems containing loosely coupled
-discrete-event and continuous processes (such as those in process simulation applications).
-A preliminary version of the framework is described in <a href="./publications/NehaKaranjkarSubodhJoshi_LNNS.pdf">this paper</a>.</p>
-<table class="imgtable"><tr><td>
-<a href="./publications/NehaKaranjkarSubodhJoshi_LNNS.pdf"><img src="./images/MDCS.png" alt="Simulation of Mixed Discrete-Continuous Systems" height="300px" /></a>&nbsp;</td>
-<td align="left"></td></tr></table>
-<h3>Approaches and Tools for Automated Model Generation</h3>
-<p>We are developing approaches and building tools for automated model generation.<br />
-As one component of this flow, we have built an open, cloud-hosted tool called <a href="https://datafitr.streamlit.app/">DataFITR</a> 
-for guided input modeling and random variate generation.</p>
-<table class="imgtable"><tr><td>
-<a href="./"><img src="./images/DataFITR.png" alt="Automated Model Generation" height="500px" /></a>&nbsp;</td>
-<td align="left"></td></tr></table>
-<h3>Open libraries for Simulation and Design exploration of Supply Chain Networks</h3>
-<p>We are developing an open Python library for the simulation of inventory and supply chain networks, coupled with meta-model based design exploration tool-sets. Preliminary work was published in Simultech 2023, and an extended abstract in SIGSIM PADS 2024. </p>
-<h2>Past Projects</h2>
-<h3>Simulation-based Stochastic Optimization over Integer-valued Parameters in Queueing Networks and Computer System models</h3>
-<p>My PhD thesis proposed an embedding approach to convert the integer-valued parameters in a simulation model (such as queue or buffer capacities, number of servers and integer delays in a discrete-time model) into continuous parameters through a modification of the simulation model by introducing stochasticity in behavior. We showed that this yeilds a perfect interpolation of the long-run average performance measures. The embedding allows one to apply descent-based or other continuous optimizers directly over a simulation model for optimization over interger-valued and real-valued decision variables. This work was published in MASCOTS 2015 (for computer systems optimization) and ESM 2018 (for optimization of queueing networks).</p>
-<h3>IoT End-Point Simulation Framework for at-scale testing of middlewares and applications</h3>
-<p>This was a project at RBCCPS (IISc Bangalore) with the aim 
-of developing a scalable and flexible framework for the
-simulation of the device layer in smart-city applications.<br />
-(August 2018 - January 2019)</p>
-<h3>Discrete-event modeling for Industrial IoT applications</h3>
-<p>As a part of an <i>Energy-efficient assembly lines</i> project at RBCCPS, the project 
-involved building simulation models of the assembly line for prediction, optimization
-and real-time monitoring in an industrial Internet-of-Things framework. An open-source
-simulator for an SMT-PCB assembly line with GUI support, developed as a part of this project
-is available <a href="https://github.com/NehaKaranjkar/IIoT_RBCCPS/">here</a>.<br />
-PI: Prof. Rajesh Sundaresan, IISc Bangalore<br />
-(August 2017 - August 2018)</p>
-<h3>Development of Executable Simulation Models for the Ajit Processor</h3>
-<p>I developed detailed C-based functional and timing models of the memory subsystem components
-(caches, MMU, TLB, Main memory) and basic peripherals for the Ajit Processor (a Sparc-v8 based
-indiginous processor developed at IIT Bombay). I also worked on porting the Linux kernel to the Ajit processor platform by modifying the kernel entry code and writing basic device drivers.</p>
+<h1>Projects</h1>
+<meta http-equiv="refresh" content="0; url=Research.html">
+<p>This page has moved to <a href="Research.html">Research</a>.</p>
 <div id="footer">
 <div id="footer-text">
 </td>
