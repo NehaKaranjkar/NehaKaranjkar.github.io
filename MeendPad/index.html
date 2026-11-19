@@ -36,14 +36,20 @@
   color-scheme: light;
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;background:var(--ground);color:var(--ink);font:13px/1.35 var(--font-ui);overflow:hidden;
+html,body{margin:0;height:100%;background:var(--ground);color:var(--ink);font:13px/1.35 var(--font-ui);overflow:hidden;-webkit-tap-highlight-color:transparent;
   user-select:none;-webkit-user-select:none}
 #app{display:flex;flex-direction:column;height:100%}
-#bar{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;padding:8px 14px;background:var(--rail);border-bottom:1px solid var(--line)}
-.grp{display:flex;align-items:center;gap:4px}
+#bar{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;padding:8px 14px;background:var(--rail);border-bottom:1px solid var(--line);
+  max-height:62vh;overflow-y:auto;flex:none}
+/* Collapsed settings: one slim row with the toggle, a summary and the status. */
+#bar.collapsed .grp{display:none}
+#barSummary{display:none;flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--mute);font-size:12px}
+#bar.collapsed #barSummary{display:block}
+#barToggle{font-weight:600;border-color:var(--brass);color:var(--brass)}
+.grp{display:flex;flex-wrap:wrap;align-items:center;gap:4px;min-width:0}
 .lbl{color:var(--mute);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;margin-right:4px}
 .sub{color:var(--mute);font-size:10.5px;margin:0 2px 0 6px}
-button,select{font:inherit;color:var(--ink);background:var(--btn);border:1px solid var(--line);border-radius:4px;padding:4px 8px;cursor:pointer}
+button,select{font:inherit;color:var(--ink);background:var(--btn);border:1px solid var(--line);border-radius:4px;padding:4px 8px;cursor:pointer;touch-action:manipulation}
 button{min-width:30px}
 button:hover,select:hover{border-color:var(--btn-hover)}
 button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--brass);outline-offset:1px}
@@ -85,11 +91,29 @@ canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor
 #astat.ok{color:var(--good)}
 #astat.bad{color:var(--bad)}
 .card .go{margin-top:12px;font-size:15px;padding:8px 18px}
+/* Echo button for touch screens, which have no Space key. Hold a note with one finger and tap it with another. */
+.fab{position:absolute;right:max(14px,env(safe-area-inset-right,0px));bottom:max(14px,env(safe-area-inset-bottom,0px));display:none;
+  padding:12px 20px;border-radius:999px;font-weight:700;font-size:14px;color:var(--vol);background:var(--rail);border:2px solid var(--vol);
+  box-shadow:0 2px 8px rgba(0,0,0,.35);touch-action:none}
+.fab:active{background:var(--vol);color:var(--rail)}
+html.touch .fab{display:block}
+@media (max-height: 500px){ .fab{padding:8px 15px;font-size:13px} }
+/* Bigger targets for fingers. */
+@media (pointer: coarse){ button,select{padding:7px 10px} .seg button{padding:7px 9px} .notes button{min-width:36px} }
+/* Narrow screens: tighter bar and smaller status. */
+@media (max-width: 640px){
+  #bar{gap:8px 12px;padding:6px max(10px,env(safe-area-inset-right,0px)) 6px max(10px,env(safe-area-inset-left,0px))}
+  #status{gap:8px;padding-left:4px} #pmeter{width:78px} #pbar{width:60px} #astat{width:92px;font-size:10px}
+  .notes button{min-width:27px;padding:7px 2px}
+  .card{padding:16px 18px;font-size:13px}
+}
 </style>
 </head>
 <body>
 <div id="app">
   <div id="bar">
+    <button id="barToggle" aria-expanded="true" aria-controls="bar" title="Show or hide the settings">Settings</button>
+    <span id="barSummary"></span>
     <div class="grp"><span class="lbl">Sa</span><div class="seg notes" id="saNotes" title="Base pitch (Sa)"></div></div>
     <div class="grp"><span class="lbl">Octave</span><button id="octDn" aria-label="Octave down">−</button><span class="val" id="octVal">3</span><button id="octUp" aria-label="Octave up">+</button><span class="val" id="saHz"></span></div>
     <div class="grp"><span class="lbl">Thaat</span><select id="thaat"></select></div>
@@ -112,17 +136,19 @@ canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor
   </div>
   <div id="stage">
     <canvas id="cv"></canvas>
+    <button id="echoBtn" class="fab" aria-label="Echo (same as Space)">Echo</button>
     <div class="overlay" id="help">
       <div class="card">
         <h2>Meend Pad</h2>
         <div>The board is one sitar string. The open string is tuned to mandra Ma at the far left. Pitch rises to the right, fret by fret, up to taar Pa.</div>
         <ul>
+          <li>On a phone or tablet, play with a finger or a stylus. Hold a note with one finger and tap <b>Echo</b> (bottom right) with another for an echo. Turn the phone sideways for more room. The <b>Settings</b> button at the top shows or hides the settings.</li>
           <li>Press down with the pen, or click and drag with a mouse, to sound the note. The tone lasts as long as you hold it, and stops when you lift.</li>
           <li>The <b>Volume</b> slider sets the base level. With a Wacom pen, lighter or heavier pressure moves the level around that base.</li>
           <li>Left and right move along the string. <b>Snap</b> holds the frets of the chosen thaat like a sitar. <b>Free</b> slides continuously. Thin grey lines mark the notes the thaat leaves out. Fret spacing can be <b>Equal</b> or <b>Geometric</b> (closer together higher up, as on a real string).</li>
           <li>The light band across the middle is the baseline. On the band you hear the fret note. Moving up from it raises the pitch, like pulling a string (meend). Moving down lowers it by the same scale, so the height of a curve always reads as pitch. Short coloured ticks on each fret mark where each swara lies, above or below that fret's note.</li>
           <li>The pull can go as far as the board's edge. Faint lines mark each semitone. <b>Depth</b> sets how far the pen travels for the first semitone of meend. With <b>Geometric</b> spacing each further semitone takes a little less travel, like the frets. With <b>Equal</b> every semitone takes the same travel. Either way the vertical scale is the same on every fret.</li>
-          <li><kbd>Space</kbd> or a pen side button makes an echo. The note you are holding stays sounding where it is and fades out over the <b>Echo trail</b> time, while a second voice starts on the same note and follows your pen. It sounds like two people, one following the other. A shrinking ring marks each echo. Set the trail slider fully right for <b>hold</b>. Then the left note sustains until you press Space with the pen lifted. You can change the Tone while an echo sounds. The echo keeps its own instrument. <kbd>X</kbd> or the eraser end clears the trails and stops any echoes still sounding. <kbd>T</kbd> toggles the tanpura. <kbd>F</kbd> goes fullscreen. <kbd>1</kbd> to <kbd>5</kbd> pick the tone (Cello, Violin, Voice male, Voice female, Flute), even while you play.</li>
+          <li><kbd>Space</kbd> or a pen side button makes an echo. The note you are holding stays sounding where it is and fades out over the <b>Echo trail</b> time. Nothing new starts until you lift the pen and touch down again, so you can move to the next note and start it gracefully over the trailing one. It sounds like two people, one following the other. A shrinking ring marks each echo. Set the trail slider fully right for <b>hold</b>. Then the left note sustains until you press Space again with no note playing. You can change the Tone while an echo sounds. The echo keeps its own instrument. <kbd>X</kbd> or the eraser end clears the trails and stops any echoes still sounding. <kbd>T</kbd> toggles the tanpura. <kbd>F</kbd> goes fullscreen. <kbd>1</kbd> to <kbd>5</kbd> pick the tone (Cello, Violin, Voice male, Voice female, Flute), even while you play.</li>
         </ul>
         <div style="color:var(--mute)">Shruti tuning places each swara where Hindustani practice puts it for the chosen thaat, for example a lower komal re in Bhairav and Todi. Equal tuning uses Western equal temperament for comparison.</div>
         <button class="go on" id="startBtn">Start</button>
@@ -397,8 +423,9 @@ class Voice {
   }
 }
 
-// Melody instrument with echo. One voice instance follows the pen. Echo (Space) leaves that instance holding its
-// note and fading out over the trail time, while a fresh instance of the other player carries on from the same note.
+// Melody instrument with echo. One voice instance follows the pen. Echo (Space) turns that instance into a trailing
+// note that holds its pitch and fades over the trail time. A fresh, silent instance of the other player waits for the
+// next pen-down, so nothing new sounds until then and there is no jump in loudness.
 class MelodyProc extends AudioWorkletProcessor {
   constructor() {
     super();
@@ -461,13 +488,12 @@ class MelodyProc extends AudioWorkletProcessor {
     // the old voice holds its note and its effort, drifts to one side, and fades out (or holds, with trail 0)
     old.tgtLogF = old.logF; old.fadeAt = 0; old.fadeLen = this.trail > 0 ? Math.max(1, Math.round(this.trail * this.sr)) : Infinity;
     old.panT = old.person ? 0.25 : -0.25;
-    // the new voice starts at once on the same note, at the same effort, and drifts to the other side
+    // the new voice waits silently on the same note for the next pen-down, and will sit on the other side
     if (nv.mode !== this.mode || nv.P !== this.P) nv.setPreset(this.mode, this.P);
     nv.reset(); nv.on = true;
-    nv.logF = nv.tgtLogF = old.logF; nv.gainT = old.gainT; nv.gain = old.gain; nv.fg = old.fg;
+    nv.logF = nv.tgtLogF = old.logF;
     nv.bow.setF(Math.exp(nv.logF));
     nv.pan = old.pan; nv.panT = -old.panT;
-    if (this.mode === 1) nv.chiff = 0.6;
     this.active = nv;
   }
   process(inputs, outputs) {
@@ -746,7 +772,7 @@ function applyAudio() {
 // so higher frets crowd together. "Equal" gives every semitone the same width.
 const cv = document.getElementById('cv'), g = cv.getContext('2d');
 const bg = document.createElement('canvas'), bgx = bg.getContext('2d');
-let W = 0, H = 0, dpr = 1, box = { x: 0, y: 0, w: 0, h: 0 }, bandY = 0, rect = null;
+let W = 0, H = 0, dpr = 1, box = { x: 0, y: 0, w: 0, h: 0 }, bandY = 0, rect = null, compact = false;
 const uOf = s => S.geo ? 1 - Math.pow(2, -(s - S_MIN) / 12) : (s - S_MIN) / (S_MAX - S_MIN);
 const xOf = c => box.x + box.w * uOf(c / 100) / uOf(S_MAX);
 function cOf(x) {
@@ -769,9 +795,12 @@ function layout() {
   for (const c of [cv, bg]) { c.width = Math.round(W * dpr); c.height = Math.round(H * dpr); }
   // In fullscreen the band sits at the screen's vertical centre, which is the tablet's centre when it is mapped to the monitor.
   const band = document.fullscreenElement ? screen.height / 2 - rect.top : H / 2;
-  bandY = clamp(band, 110, Math.max(110, H - 110));
-  const half = Math.max(50, Math.min(bandY - 54, H - 50 - bandY));
-  box = { x: 20, y: bandY - half, w: W - 40, h: 2 * half };
+  // Short screens (a phone held sideways) get tighter label margins, and narrow ones a thinner side margin.
+  compact = H < 520;
+  const topM = compact ? 40 : 54, botM = compact ? 34 : 50, side = W < 640 ? 12 : 20;
+  bandY = clamp(band, topM + 40, Math.max(topM + 40, H - botM - 40));
+  const half = Math.max(30, Math.min(bandY - topM, H - botM - bandY));
+  box = { x: side, y: bandY - half, w: W - 2 * side, h: 2 * half };
   drawBg();
 }
 
@@ -853,6 +882,8 @@ function drawBg() {
       c2.strokeStyle = PAL.shine; c2.lineWidth = 1;
       c2.beginPath(); c2.moveTo(x - 0.5, box.y + 10); c2.lineTo(x - 0.5, box.y + box.h - 10); c2.stroke();
     }
+    // where frets crowd together (high frets on a narrow screen) only Sa, Pa and the open string keep their labels
+    if (gap < 14 && !strong && !f.open) return;
     const size = clamp(Math.round(gap * 0.42), 10, 16) + (strong && gap > 34 ? 1 : 0);
     drawSwara(c2, f.pc, f.oct, x, box.y - 16, colOf(f.c, 70), size);
     // Western name below, plus how far this shruti sits from equal temperament
@@ -864,14 +895,15 @@ function drawBg() {
       c2.font = `9px ${numFont}`; c2.fillStyle = ink(.4);
       c2.fillText((dev > 0 ? '+' : '−') + Math.abs(dev), x, box.y + box.h + 29);
     }
-    if (f.open) { c2.font = `9px ${numFont}`; c2.fillStyle = ink(.4); c2.fillText('open', x, box.y + box.h + 40); }
+    if (f.open && !compact) { c2.font = `9px ${numFont}`; c2.fillStyle = ink(.4); c2.fillText('open', x, box.y + box.h + 40); }
   });
 }
 
 // ---------- strokes and pointer ----------
 let strokes = [], stroke = null, hover = null, live = null, livePressure = 0, livePtype = '';
 // Echo markers, one per echo, fading over the trail time at the spot where the held voice was left.
-// The far right of the trail slider means hold. A held echo sounds until Space is pressed with the pen lifted.
+// The far right of the trail slider means hold. A held echo sounds until Space is pressed with no note playing.
+// Space ends the current stroke. The pen then stays silent until it is lifted and put down again.
 let echoes = [];
 const trailHold = () => S.trail >= 12.5;
 function echo() {
@@ -881,6 +913,7 @@ function echo() {
   }
   send({ type: 'echo' });
   echoes.push({ x: live.x, y: live.y, c: live.c, t: performance.now(), T: trailHold() ? Infinity : S.trail * 1000 });
+  stroke.done = true; stroke = null; live = null; livePressure = 0;
 }
 // Pen pressure moves the level around the slider's base volume (about 1.0 at half pressure).
 // Mouse and touch play at the base volume.
@@ -914,6 +947,7 @@ cv.addEventListener('pointerdown', e => {
   if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
   if (e.pointerType === 'pen' && (e.button === 5 || (e.buttons & 32))) { clearTrails(); return; }
   if (e.button !== 0) return;
+  if (stroke && e.pointerId !== stroke.id) return;   // a second finger on the board is ignored
   initAudio();
   try { cv.setPointerCapture(e.pointerId); } catch (err) {}
   const { x, y } = local(e), p = pressureOf(e);
@@ -1104,9 +1138,30 @@ function toggleFs() {
 document.getElementById('fs').onclick = toggleFs;
 const help = document.getElementById('help');
 document.getElementById('helpBtn').onclick = () => { help.hidden = false; };
+
+// Collapsible settings. On a first visit from a phone-sized screen they start collapsed, to leave room for the board.
+const bar = document.getElementById('bar'), barToggle = document.getElementById('barToggle');
+function setBar(open) {
+  S.barOpen = open; save();
+  bar.classList.toggle('collapsed', !open);
+  barToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  barToggle.textContent = open ? 'Hide settings ▴' : 'Settings ▾';
+}
+barToggle.onclick = () => { setBar(!S.barOpen); barToggle.blur(); };
+if (typeof S.barOpen !== 'boolean') S.barOpen = !(window.matchMedia && matchMedia('(max-width: 760px), (max-height: 500px)').matches);
+
+// Touch screens get an on-screen Echo button, shown once a touch is seen or on a touch-first device.
+const markTouch = () => document.documentElement.classList.add('touch');
+if (window.matchMedia && matchMedia('(pointer: coarse)').matches) markTouch();
+window.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') markTouch(); }, true);
+const echoBtn = document.getElementById('echoBtn');
+echoBtn.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); echo(); });
+echoBtn.addEventListener('contextmenu', e => e.preventDefault());
 document.getElementById('startBtn').onclick = () => { help.hidden = true; initAudio(); };
 
 function refresh() {
+  document.getElementById('barSummary').textContent =
+    `${TONES[S.tone].label} · Sa ${NOTE[S.saPc]}${S.saOct} · ${S.thaat}${S.tanOn ? ' · tanpura on' : ''}`;
   markSeg('saNotes', S.saPc); markSeg('tone', S.tone); markSeg('snap', S.snap); markSeg('geo', S.geo);
   markSeg('theme', applyTheme());
   markSeg('tuning', S.tuning); markSeg('tanFirst', S.tanFirst); markSeg('fade', S.fade);
@@ -1153,6 +1208,7 @@ if (window.matchMedia) matchMedia('(prefers-color-scheme: light)').addEventListe
 new ResizeObserver(() => { layout(); refresh(); }).observe(document.getElementById('stage'));
 document.addEventListener('fullscreenchange', () => setTimeout(() => { layout(); refresh(); }, 60));
 
+setBar(S.barOpen);
 refresh();
 layout();
 requestAnimationFrame(frame);
