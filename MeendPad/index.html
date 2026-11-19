@@ -1,0 +1,1161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Meend Pad</title>
+<style>
+/* Layout concept. A slim control rail on top, and below it one wide fretboard that fills the screen,
+   so the Wacom's whole active area maps onto the playing surface. Deliberately single dark theme,
+   like a dim practice room with a lamp on the fretboard. */
+:root{
+  --ground:#17130f;      /* room */
+  --rail:#211b16;        /* control rail */
+  --wood:#2b211a;        /* fretboard */
+  --line:#3d3229;
+  --ink:#ece2d4;
+  --mute:#a29482;
+  --brass:#d9a441;       /* accent, brass frets and active buttons */
+  --brass-ink:#1c1408;
+  --btn:#2c241d;
+  --btn-hover:#6e5c49;
+  --track:#3a3027;
+  --scrim:rgba(14,11,8,.8);
+  --good:#8fd18a;
+  --bad:#e87a5d;
+  --vol:#4cc3b0;         /* volume control, set apart from the brass accent */
+  --vol-bg:rgba(76,195,176,.12);
+  --font-ui: "Inter", "Noto Sans", "Segoe UI", system-ui, sans-serif;
+  --font-num: "JetBrains Mono", "DejaVu Sans Mono", ui-monospace, monospace;
+  color-scheme: dark;
+}
+:root[data-theme="light"]{
+  --ground:#e9e3d8; --rail:#f6f1e8; --wood:#e2cfad; --line:#cbbca6; --ink:#271e16; --mute:#6c5e4f;
+  --brass:#a86f12; --brass-ink:#fffaf0; --btn:#efe7da; --btn-hover:#a08c72; --track:#d9cdbb;
+  --scrim:rgba(233,227,216,.86); --good:#2f8a3a; --bad:#b4472c; --vol:#0f7f70; --vol-bg:rgba(15,127,112,.1);
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--ground);color:var(--ink);font:13px/1.35 var(--font-ui);overflow:hidden;
+  user-select:none;-webkit-user-select:none}
+#app{display:flex;flex-direction:column;height:100%}
+#bar{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;padding:8px 14px;background:var(--rail);border-bottom:1px solid var(--line)}
+.grp{display:flex;align-items:center;gap:4px}
+.lbl{color:var(--mute);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;margin-right:4px}
+.sub{color:var(--mute);font-size:10.5px;margin:0 2px 0 6px}
+button,select{font:inherit;color:var(--ink);background:var(--btn);border:1px solid var(--line);border-radius:4px;padding:4px 8px;cursor:pointer}
+button{min-width:30px}
+button:hover,select:hover{border-color:var(--btn-hover)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--brass);outline-offset:1px}
+button.on{background:var(--brass);color:var(--brass-ink);border-color:var(--brass);font-weight:600}
+.seg{display:flex}
+.seg button{border-radius:0;margin-left:-1px}
+.seg button:first-child{border-radius:4px 0 0 4px;margin-left:0}
+.seg button:last-child{border-radius:0 4px 4px 0}
+.notes button{min-width:34px;padding:4px 5px}
+.key{font-family:var(--font-num);font-size:9.5px;opacity:.55;margin-left:5px;vertical-align:1px}
+input[type=range]{width:72px;accent-color:var(--brass)}
+input[type=range]:disabled,button:disabled{opacity:.35;cursor:default}
+.sub.off{opacity:.45}
+.val{font-family:var(--font-num);font-size:12px;color:var(--mute);min-width:2.2em}
+.volgrp{background:var(--vol-bg);border:1px solid var(--vol);border-radius:8px;padding:4px 12px 4px 10px;gap:10px}
+.volgrp .lbl{color:var(--vol);font-weight:700;margin-right:0}
+.volgrp .val{color:var(--vol);font-weight:700}
+#vol{-webkit-appearance:none;appearance:none;width:170px;height:8px;margin:0;border-radius:4px;cursor:pointer;
+  background:linear-gradient(to right,var(--vol) var(--p,70%),var(--track) var(--p,70%))}
+#vol::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:var(--vol);
+  border:3px solid var(--rail);box-shadow:0 0 0 1px var(--vol),0 1px 3px rgba(0,0,0,.35)}
+#vol::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--vol);border:3px solid var(--rail);box-shadow:0 0 0 1px var(--vol)}
+#vol::-moz-range-track{background:transparent}
+/* Status items have fixed widths so changing text can never re-wrap the bar and resize the board. */
+#status{margin-left:auto;display:flex;align-items:center;gap:12px;padding-left:10px;flex:none}
+#pmeter{display:flex;flex-direction:column;gap:3px;align-items:flex-start;width:130px;flex:none}
+#pmeter span{font-size:10px;color:var(--mute);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;width:100%}
+#pbar{width:70px;height:6px;background:var(--track);border-radius:3px;overflow:hidden}
+#pbar>i{display:block;height:100%;width:0;background:var(--brass)}
+#stage{position:relative;flex:1;min-height:0}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--scrim);padding:16px}
+.overlay[hidden]{display:none}
+.card{max-width:640px;background:var(--rail);border:1px solid var(--line);border-radius:8px;padding:22px 26px;line-height:1.55;max-height:100%;overflow:auto}
+.card h2{margin:0 0 8px;font-size:20px;color:var(--brass)}
+.card ul{padding-left:18px;margin:8px 0}
+.card kbd{font-family:var(--font-num);background:var(--btn);border:1px solid var(--line);border-radius:3px;padding:0 4px}
+#astat{font-size:11px;color:var(--mute);width:136px;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#astat.ok{color:var(--good)}
+#astat.bad{color:var(--bad)}
+.card .go{margin-top:12px;font-size:15px;padding:8px 18px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="bar">
+    <div class="grp"><span class="lbl">Sa</span><div class="seg notes" id="saNotes" title="Base pitch (Sa)"></div></div>
+    <div class="grp"><span class="lbl">Octave</span><button id="octDn" aria-label="Octave down">−</button><span class="val" id="octVal">3</span><button id="octUp" aria-label="Octave up">+</button><span class="val" id="saHz"></span></div>
+    <div class="grp"><span class="lbl">Thaat</span><select id="thaat"></select></div>
+    <div class="grp"><span class="lbl">Tone</span><div class="seg" id="tone"></div></div>
+    <div class="grp"><span class="lbl">Frets</span><div class="seg" id="snap"></div><div class="seg" id="geo" title="Fret spacing"></div></div>
+    <div class="grp"><span class="lbl">Tuning</span><div class="seg" id="tuning"></div></div>
+    <div class="grp"><span class="lbl">Meend</span>
+      <span class="sub">depth</span><input type="range" id="pullPx" min="12" max="60" step="1" aria-label="Pen travel for the first semitone of meend" title="Pen travel for the first semitone of meend"><span class="val" id="pullPxVal"></span></div>
+    <div class="grp" title="Space or a pen side button leaves the held note sounding and fading over this time, while a new voice carries on"><span class="lbl">Echo</span><span class="sub">trail</span><input type="range" id="trail" min="0.5" max="12.5" step="0.5" aria-label="Echo trail time in seconds, or hold at the far right"><span class="val" id="trailVal"></span></div>
+    <div class="grp"><span class="lbl">Tanpura</span><button id="tanOn">Off</button><div class="seg" id="tanFirst"></div>
+      <span class="sub">level</span><input type="range" id="tanVol" min="0" max="1" step="0.01" aria-label="Tanpura volume" title="Tanpura volume">
+      <span class="sub">speed</span><button id="tanSlow" aria-label="Tanpura slower">−</button><span class="val" id="tanSpeedVal"></span><button id="tanFast" aria-label="Tanpura faster">+</button></div>
+    <div class="grp volgrp"><span class="lbl">Volume</span><input type="range" id="vol" min="0" max="1" step="0.01" aria-label="Base volume"><span class="val" id="volVal"></span></div>
+    <div class="grp"><span class="lbl">Trails</span><div class="seg" id="fade"></div><button id="clear" title="Clear trails (X)">Clear</button></div>
+    <div class="grp"><div class="seg" id="theme" title="Colour theme"></div><button id="fs" title="Fullscreen (F)">Fullscreen</button><button id="helpBtn" title="Help">?</button></div>
+    <div id="status">
+      <div id="pmeter"><span id="ptype">pressure</span><div id="pbar"><i></i></div></div>
+      <div id="astat" title="Audio engine status">audio off</div>
+    </div>
+  </div>
+  <div id="stage">
+    <canvas id="cv"></canvas>
+    <div class="overlay" id="help">
+      <div class="card">
+        <h2>Meend Pad</h2>
+        <div>The board is one sitar string. The open string is tuned to mandra Ma at the far left. Pitch rises to the right, fret by fret, up to taar Pa.</div>
+        <ul>
+          <li>Press down with the pen, or click and drag with a mouse, to sound the note. The tone lasts as long as you hold it, and stops when you lift.</li>
+          <li>The <b>Volume</b> slider sets the base level. With a Wacom pen, lighter or heavier pressure moves the level around that base.</li>
+          <li>Left and right move along the string. <b>Snap</b> holds the frets of the chosen thaat like a sitar. <b>Free</b> slides continuously. Thin grey lines mark the notes the thaat leaves out. Fret spacing can be <b>Equal</b> or <b>Geometric</b> (closer together higher up, as on a real string).</li>
+          <li>The light band across the middle is the baseline. On the band you hear the fret note. Moving up from it raises the pitch, like pulling a string (meend). Moving down lowers it by the same scale, so the height of a curve always reads as pitch. Short coloured ticks on each fret mark where each swara lies, above or below that fret's note.</li>
+          <li>The pull can go as far as the board's edge. Faint lines mark each semitone. <b>Depth</b> sets how far the pen travels for the first semitone of meend. With <b>Geometric</b> spacing each further semitone takes a little less travel, like the frets. With <b>Equal</b> every semitone takes the same travel. Either way the vertical scale is the same on every fret.</li>
+          <li><kbd>Space</kbd> or a pen side button makes an echo. The note you are holding stays sounding where it is and fades out over the <b>Echo trail</b> time, while a second voice starts on the same note and follows your pen. It sounds like two people, one following the other. A shrinking ring marks each echo. Set the trail slider fully right for <b>hold</b>. Then the left note sustains until you press Space with the pen lifted. You can change the Tone while an echo sounds. The echo keeps its own instrument. <kbd>X</kbd> or the eraser end clears the trails and stops any echoes still sounding. <kbd>T</kbd> toggles the tanpura. <kbd>F</kbd> goes fullscreen. <kbd>1</kbd> to <kbd>5</kbd> pick the tone (Cello, Violin, Voice male, Voice female, Flute), even while you play.</li>
+        </ul>
+        <div style="color:var(--mute)">Shruti tuning places each swara where Hindustani practice puts it for the chosen thaat, for example a lower komal re in Bhairav and Todi. Equal tuning uses Western equal temperament for comparison.</div>
+        <button class="go on" id="startBtn">Start</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== Audio DSP (runs in an AudioWorklet) ===================== -->
+<script type="text/plain" id="worklet-src">
+const TWO_PI = Math.PI * 2;
+const BUF = 16384, MASK = BUF - 1;
+
+// Plucked string as a digital waveguide loop (Karplus-Strong family).
+// Fractional delay uses 4-point Lagrange interpolation so pitch is exact and can glide smoothly.
+// The jawari bridge is modelled by shortening the loop delay while the string is displaced
+// toward the bridge, which produces the buzzing, sweeping overtones of sitar and tanpura.
+class WGString {
+  constructor(sr) {
+    this.sr = sr;
+    this.buf = new Float32Array(BUF);
+    this.w = 0; this.lp = 0; this.x = 0; this.mAvg = 0; this.dcx = 0; this.dcy = 0;
+    this.f = 110; this.a = 0.3; this.t60 = 6; this.jaw = 0;
+    this.damp = 1; this.dampS = 1;
+    this.exc = null; this.ep = 0;
+    this.avgK = 1 - Math.exp(-1 / (0.03 * sr));
+    this.coef();
+  }
+  coef() {
+    const w = TWO_PI * this.f / this.sr, a = this.a;
+    // phase delay of the one-pole loss filter, subtracted so the loop tunes exactly
+    const pd = Math.atan2(a * Math.sin(w), 1 - a * Math.cos(w)) / w;
+    this.D = Math.min(BUF - 8, Math.max(6, this.sr / this.f - pd));
+    this.g = Math.exp(-6.9078 / (this.f * this.t60));
+  }
+  setF(f) { this.f = f; this.coef(); }
+  // amp is the peak level, width the contact time in seconds, pos the pluck point as a fraction of the string
+  pluck(amp, width, pos, noise) {
+    const sr = this.sr;
+    const W = Math.max(2, Math.round(width * sr));
+    const P = Math.max(1, Math.round(pos * sr / this.f));
+    const n = W + P;
+    const p = new Float32Array(n);
+    for (let k = 0; k < W; k++) {
+      const env = 0.5 - 0.5 * Math.cos(TWO_PI * (k + 0.5) / W);
+      p[k] = env * (1 + noise * (Math.random() * 2 - 1));
+    }
+    const e = new Float32Array(n);
+    let mx = 1e-9;
+    for (let k = 0; k < n; k++) { e[k] = p[k] - (k >= P ? p[k - P] : 0); mx = Math.max(mx, Math.abs(e[k])); }
+    const s = amp / mx;
+    for (let k = 0; k < n; k++) e[k] *= s;
+    this.exc = e; this.ep = 0;
+  }
+  tick(input) {
+    let mod = 0;
+    if (this.jaw > 0) {
+      const x = this.x;
+      mod = x > 0 ? this.jaw * x / (x + 0.12) : 0;
+      this.mAvg += (mod - this.mAvg) * this.avgK;
+    }
+    // partial compensation of the average shortening keeps loud notes within about 1 cent (measured offline)
+    let D = this.D * (1 - mod + 0.3 * this.mAvg);
+    if (D < 4) D = 4; else if (D > BUF - 8) D = BUF - 8;
+    const di = Math.floor(D), d = D - di + 1;
+    const d1 = d - 1, d2 = d - 2, d3 = d - 3;
+    const h0 = -d1 * d2 * d3 / 6, h1 = d * d2 * d3 / 2, h2 = -d * d1 * d3 / 2, h3 = d * d1 * d2 / 6;
+    const b = this.buf, w = this.w;
+    const x = h0 * b[(w - di + 1) & MASK] + h1 * b[(w - di) & MASK] + h2 * b[(w - di - 1) & MASK] + h3 * b[(w - di - 2) & MASK];
+    this.lp = (1 - this.a) * x + this.a * this.lp;
+    // DC blocker inside the loop, since the one-sided bridge contact pushes the string off centre
+    this.dcy = this.lp - this.dcx + 0.9998 * this.dcy; this.dcx = this.lp;
+    this.dampS += (this.damp - this.dampS) * 0.002;
+    let y = this.dcy * this.g * this.dampS + input;
+    if (this.exc) { y += this.exc[this.ep++]; if (this.ep >= this.exc.length) this.exc = null; }
+    if (!(y < 6 && y > -6)) { this.buf.fill(0); this.lp = 0; this.mAvg = 0; this.dcx = this.dcy = 0; y = 0; }
+    b[w] = y; this.w = (w + 1) & MASK;
+    this.x = x;
+    return y;
+  }
+}
+
+// 4-point Lagrange read at a fractional delay D (in samples) behind write index w.
+function lagr(b, w, D) {
+  const di = Math.floor(D), d = D - di + 1;
+  const d1 = d - 1, d2 = d - 2, d3 = d - 3;
+  return -d1 * d2 * d3 / 6 * b[(w - di + 1) & MASK] + d * d2 * d3 / 2 * b[(w - di) & MASK]
+         - d * d1 * d3 / 2 * b[(w - di - 1) & MASK] + d * d1 * d2 / 6 * b[(w - di - 2) & MASK];
+}
+
+// Standard RBJ biquad, used for the instrument body.
+class Biquad {
+  constructor() { this.b0 = 1; this.b1 = this.b2 = this.a1 = this.a2 = 0; this.x1 = this.x2 = this.y1 = this.y2 = 0; }
+  set(type, f, Q, dB, sr) {
+    const A = Math.pow(10, dB / 40), w = TWO_PI * f / sr, cw = Math.cos(w), al = Math.sin(w) / (2 * Q);
+    let b0, b1, b2, a0, a1, a2;
+    if (type === 'peak') { b0 = 1 + al * A; b1 = -2 * cw; b2 = 1 - al * A; a0 = 1 + al / A; a1 = -2 * cw; a2 = 1 - al / A; }
+    else if (type === 'hp') { b0 = (1 + cw) / 2; b1 = -(1 + cw); b2 = (1 + cw) / 2; a0 = 1 + al; a1 = -2 * cw; a2 = 1 - al; }
+    else if (type === 'lp') { b0 = (1 - cw) / 2; b1 = 1 - cw; b2 = (1 - cw) / 2; a0 = 1 + al; a1 = -2 * cw; a2 = 1 - al; }
+    else { // high shelf
+      const sq = 2 * Math.sqrt(A) * al;
+      b0 = A * ((A + 1) + (A - 1) * cw + sq); b1 = -2 * A * ((A - 1) + (A + 1) * cw); b2 = A * ((A + 1) + (A - 1) * cw - sq);
+      a0 = (A + 1) - (A - 1) * cw + sq; a1 = 2 * ((A - 1) - (A + 1) * cw); a2 = (A + 1) - (A - 1) * cw - sq;
+    }
+    this.b0 = b0 / a0; this.b1 = b1 / a0; this.b2 = b2 / a0; this.a1 = a1 / a0; this.a2 = a2 / a0;
+  }
+  tick(x) {
+    const y = this.b0 * x + this.b1 * this.x1 + this.b2 * this.x2 - this.a1 * this.y1 - this.a2 * this.y2;
+    this.x2 = this.x1; this.x1 = x; this.y2 = this.y1; this.y1 = y;
+    return y;
+  }
+}
+
+// Bowed string after the McIntyre, Schumacher and Woodhouse friction model, in the form used by Perry Cook's STK.
+// The bow point splits the string into a neck side and a bridge side. A friction curve decides each sample
+// whether the bow sticks to the string or slips, which produces the sawtooth (Helmholtz) motion of real bowing.
+class BowedString {
+  constructor(sr) {
+    this.sr = sr; this.neck = new Float32Array(BUF); this.brg = new Float32Array(BUF); this.w = 0;
+    this.lp = 0; this.pole = 0.66; this.beta = 0.127; this.f = 220; this.trim = 0.3;
+    this.setF(220);
+  }
+  setF(f) {
+    this.f = f;
+    const w = TWO_PI * f / this.sr, p = this.pole;
+    const pd = Math.atan2(p * Math.sin(w), 1 - p * Math.cos(w)) / w;   // delay of the string loss filter
+    const L = Math.min(BUF - 8, Math.max(12, this.sr / f - pd + this.trim));
+    this.Db = Math.max(4, L * this.beta); this.Dn = Math.max(4, L - this.Db);
+  }
+  tick(vel, force) {
+    const w = this.w;
+    const bOut = lagr(this.brg, w, this.Db), nOut = lagr(this.neck, w, this.Dn);
+    this.lp = 0.95 * (1 - this.pole) * bOut + this.pole * this.lp;
+    const bridgeRefl = -this.lp, nutRefl = -nOut;
+    const dv = vel - (bridgeRefl + nutRefl);
+    let t = Math.abs((dv + 0.001) * (5 - 4 * force)) + 0.75;
+    t = 1 / (t * t * t * t); if (t > 1) t = 1;
+    const nv = dv * t;
+    let a = bridgeRefl + nv, c = nutRefl + nv;
+    if (!(a < 4 && a > -4) || !(c < 4 && c > -4)) { this.neck.fill(0); this.brg.fill(0); this.lp = 0; a = c = 0; }
+    this.neck[w] = a; this.brg[w] = c; this.w = (w + 1) & MASK;
+    return bOut;
+  }
+}
+
+// Klatt-style formant resonator with unity gain at 0 Hz.
+class Reso {
+  constructor() { this.A = 1; this.B = this.C = 0; this.y1 = this.y2 = 0; }
+  set(F, BW, sr) {
+    this.C = -Math.exp(-TWO_PI * BW / sr);
+    this.B = 2 * Math.exp(-Math.PI * BW / sr) * Math.cos(TWO_PI * F / sr);
+    this.A = 1 - this.B - this.C;
+  }
+  tick(x) { const y = this.A * x + this.B * this.y1 + this.C * this.y2; this.y2 = this.y1; this.y1 = y; return y; }
+}
+
+// One sounding instance of the melody instrument (bowed string, flute or voice).
+// mode 0 bowed string (cello, violin), 1 flute, 2 voice (aakar).
+// gain arrives from the page as the pressure level (0 to about 1.7, 0.86 for a mouse) and is read here as effort.
+// Each instance belongs to one of two "players" (person 0 or 1). Player 1 has slightly higher formants and a slightly
+// different bow, so an echo sounds like a second person.
+class Voice {
+  constructor(sr, K, person) {
+    this.sr = sr; this.K = K; this.person = person;
+    this.fscale = person ? 1.035 : 1;
+    this.bow = new BowedString(sr);
+    this.form = [0, 1, 2, 3, 4].map(() => new Reso());
+    this.body = []; this.P = {}; this.mode = 0;
+    this.on = false; this.pan = 0; this.panT = 0;
+    this.reset();
+  }
+  reset() {
+    this.logF = Math.log(110); this.tgtLogF = this.logF; this.n = 0;
+    this.gain = 0; this.gainT = 0; this.fg = 0;
+    this.flut = 0; this.flut2 = 0;
+    this.vph = 0; this.gPrev = 0; this.jit = 1; this.shim = 1; this.aspLp = 0; this.f1Now = 0;
+    this.ph = 0; this.chiff = 0; this.lo1 = this.bd1 = this.lo2 = this.bd2 = 0;
+    this.bow.neck.fill(0); this.bow.brg.fill(0); this.bow.lp = 0;
+    for (const r of this.form) { r.y1 = 0; r.y2 = 0; }
+    for (const b of this.body) { b.x1 = b.x2 = b.y1 = b.y2 = 0; }
+    this.fadeAt = -1; this.fadeLen = 1; this.releasing = false; this.relG = 1; this.relD = 0;
+  }
+  setPreset(mode, P) {
+    const sr = this.sr; this.mode = mode; this.P = P || {};
+    this.body = (this.P.body || []).map(([t, f, q, db]) => { const b = new Biquad(); b.set(t, f, q, db, sr); return b; });
+    if (this.P.pole !== undefined) this.bow.pole = this.P.pole + (this.person ? 0.02 : 0);
+    if (this.P.beta !== undefined) this.bow.beta = this.P.beta * (this.person ? 1.08 : 1);
+    this.bow.setF(Math.exp(this.logF));
+    if (this.P.formants) this.P.formants.forEach(([F, BW], i) => this.form[i].set(F * this.fscale, BW, sr));
+    this.f1Now = 0;
+  }
+  bowed(f) {
+    const K = this.K;
+    this.gain += (this.gainT - this.gain) * (this.gainT > this.gain ? K.kA : K.kR);
+    const e = Math.min(1, Math.max(0, this.gain / 1.72));
+    // bow speed and bow force both follow pressure, with a little hand unsteadiness
+    this.flut += ((Math.random() * 2 - 1) - this.flut) * 0.002;
+    // Bow force rises with bow speed, which keeps the string in clean Helmholtz motion (the Schelleng range,
+    // measured offline for this model). Too little force for the speed makes it jump to the octave.
+    const vel = (0.02 + 0.13 * Math.pow(e, 0.8)) * Math.min(1, e * 25) * (1 + 1.5 * this.flut);
+    const force = Math.min(0.95, 0.42 + 3 * vel);
+    let y = this.bow.tick(vel, force) * (0.4 + 0.6 * e);
+    for (let k = 0; k < this.body.length; k++) y = this.body[k].tick(y);
+    return y * (this.P.out || 1);
+  }
+  voice(f) {
+    const sr = this.sr, P = this.P, K = this.K;
+    this.gain += (this.gainT - this.gain) * (this.gainT > this.gain ? K.fA : K.fR);
+    const e = Math.min(1, Math.max(0, this.gain / 1.72));
+    // slow pitch wander of a few cents and per-cycle jitter, as in a real voice
+    this.flut2 += ((Math.random() * 2 - 1) - this.flut2) * 0.0004;
+    this.vph += f * this.jit * (1 + 0.15 * this.flut2) / sr;
+    if (this.vph >= 1) { this.vph -= 1; this.jit = 1 + (P.jit || 0.003) * (Math.random() * 2 - 1); this.shim = 1 + (P.shim || 0.05) * (Math.random() * 2 - 1); }
+    // Rosenberg glottal pulse. Louder singing closes the glottis faster, which brightens the tone.
+    const oq = (P.oq0 || 0.72) - (P.oqE || 0.27) * Math.min(1, e), tn = P.tn || 0.32, Tp = (1 - tn) * oq, Tn = tn * oq, ph = this.vph;
+    const gl = ph < Tp ? 0.5 - 0.5 * Math.cos(Math.PI * ph / Tp) : ph < Tp + Tn ? Math.cos(Math.PI * (ph - Tp) / (2 * Tn)) : 0;
+    let d = gl - this.gPrev; this.gPrev = gl;
+    if (d > 0.5 || d < -0.5) d = 0;   // period wrap
+    const src = d * sr / f * 0.12 * this.shim * Math.pow(130 / f, 0.6);
+    this.aspLp += ((Math.random() * 2 - 1) - this.aspLp) * 0.5;
+    const asp = this.aspLp * (0.02 + 0.05 * (1 - e)) * (P.asp || 1) * (0.3 + gl);
+    // flow adds some of the glottal flow itself, which strengthens the fundamental (a warmer, sweeter tone)
+    let y = (src + (P.flow || 0) * (gl - 0.5 * oq) + asp) * Math.pow(e, 0.9);
+    for (let k = 0; k < 5; k++) y = this.form[k].tick(y);
+    for (let k = 0; k < this.body.length; k++) y = this.body[k].tick(y);
+    // lvl evens out loudness across the range (measured offline), relative to 262 Hz
+    return y * (P.out || 1) * (P.lvl ? Math.pow(262 / f, P.lvl) : 1);
+  }
+  flute(f) {
+    const sr = this.sr, K = this.K;
+    this.fg += (this.gainT - this.fg) * (this.gainT > this.fg ? K.fA : K.fR);
+    const g = this.fg;
+    this.ph += f / sr; if (this.ph >= 1) this.ph -= 1;
+    const p = TWO_PI * this.ph;
+    const tone = Math.sin(p) + (0.12 + 0.22 * g) * Math.sin(2 * p) + (0.05 + 0.12 * g) * Math.sin(3 * p) + 0.04 * g * Math.sin(4 * p);
+    const nz = Math.random() * 2 - 1;
+    // breath noise, focused around the first two harmonics by state-variable band-pass filters
+    const F1 = 2 * Math.sin(Math.PI * Math.min(f, sr / 7) / sr), F2 = 2 * Math.sin(Math.PI * Math.min(2 * f, sr / 7) / sr), q = 0.1;
+    this.lo1 += F1 * this.bd1; const hi1 = nz - this.lo1 - q * this.bd1; this.bd1 += F1 * hi1;
+    this.lo2 += F2 * this.bd2; const hi2 = nz - this.lo2 - q * this.bd2; this.bd2 += F2 * hi2;
+    this.chiff *= 0.9993;
+    const breath = (this.bd1 * 0.12 + this.bd2 * 0.06) * (0.35 + this.chiff) + nz * 0.025 * (0.5 + this.chiff);
+    return g * (tone * 0.42 + breath) * (0.5 + 0.25 * this.chiff);
+  }
+  tick(glideK) {
+    this.logF += (this.tgtLogF - this.logF) * glideK;
+    const f = Math.exp(this.logF), n = this.n++;
+    let y;
+    if (this.mode === 0) { if ((n & 3) === 0) this.bow.setF(f); y = this.bowed(f); }
+    else if (this.mode === 2) {
+      // Singers raise the first formant to stay above a high note. Retuned every 64 samples.
+      if ((n & 63) === 0 && this.P.formants) {
+        const [F1, B1] = this.P.formants[0], want = Math.max(F1 * this.fscale, 1.15 * f);
+        if (Math.abs(want - this.f1Now) > 2) { this.form[0].set(want, B1, this.sr); this.f1Now = want; }
+      }
+      y = this.voice(f);
+    }
+    else y = this.flute(f);
+    // echo fade. It starts at exactly the level the voice had when Space was pressed and begins falling at once,
+    // a straight ramp to silence over the trail time (no plateau at full level).
+    if (this.fadeAt >= 0) {
+      const t = this.fadeAt / this.fadeLen;
+      if (t >= 1) { this.on = false; return 0; }
+      y *= 1 - t; this.fadeAt++;
+    }
+    // release of a held or fading echo, a straight ramp to silence
+    if (this.releasing) {
+      y *= this.relG; this.relG -= this.relD;
+      if (this.relG <= 0) { this.on = false; return 0; }
+    }
+    return y;
+  }
+}
+
+// Melody instrument with echo. One voice instance follows the pen. Echo (Space) leaves that instance holding its
+// note and fading out over the trail time, while a fresh instance of the other player carries on from the same note.
+class MelodyProc extends AudioWorkletProcessor {
+  constructor() {
+    super();
+    const sr = this.sr = sampleRate;
+    const K = {
+      kA: 1 - Math.exp(-1 / (0.02 * sr)), kR: 1 - Math.exp(-1 / (0.06 * sr)),
+      fA: 1 - Math.exp(-1 / (0.03 * sr)), fR: 1 - Math.exp(-1 / (0.08 * sr)),
+      relD: 1 / (0.8 * sr),
+    };
+    this.pool = [];
+    for (let i = 0; i < 8; i++) this.pool.push(new Voice(sr, K, i & 1));
+    this.active = this.pool[0]; this.active.on = true;
+    this.mode = 0; this.P = {}; this.trail = 3;
+    this.glideK = 1 - Math.exp(-1 / (0.01 * sr));
+    this.panK = 1 - Math.exp(-1 / (0.3 * sr));
+    this.port.onmessage = (e) => this.onMsg(e.data);
+  }
+  onMsg(m) {
+    const a = this.active;
+    if (m.f) a.tgtLogF = Math.log(m.f);
+    if (m.gain !== undefined) a.gainT = m.gain;
+    if (m.glide) this.glideK = 1 - Math.exp(-1 / (m.glide * this.sr));
+    switch (m.type) {
+      case 'down':
+        a.logF = a.tgtLogF; a.bow.setF(Math.exp(a.logF));
+        if (this.mode === 1) a.chiff = 1;
+        break;
+      case 'echo': this.echo(); break;
+      case 'up': a.gainT = 0; break;
+      case 'mode':
+        // A new tone applies to the voice under the pen and to idle voices. Echoes keep the tone they were played with,
+        // so a held cello note can sound under a sung line.
+        this.mode = m.mode; this.P = m.preset || {};
+        for (const v of this.pool) if (v === this.active || !v.on) v.setPreset(this.mode, this.P);
+        break;
+      case 'trail': this.trail = m.trail; break;   // seconds, or 0 to hold until released
+      case 'release': {   // m.time in seconds, default 0.8
+        const d = m.time ? 1 / (m.time * this.sr) : this.pool[0].K.relD;
+        for (const v of this.pool) if (v !== this.active && v.on) {
+          if (!v.releasing) { v.releasing = true; v.relG = 1; }
+          v.relD = Math.max(v.relD || 0, d);
+        }
+        break;
+      }
+    }
+  }
+  echo() {
+    const old = this.active;
+    if (old.gainT <= 0) return;
+    let nv = null;
+    for (const v of this.pool) if (!v.on && v.person !== old.person) { nv = v; break; }
+    if (!nv) {   // all busy, so take over the fading voice nearest its end, preferring the other player
+      let best = -1;
+      for (const v of this.pool) if (v !== old && v.fadeAt >= 0) {
+        const score = v.fadeAt / v.fadeLen + (v.person !== old.person ? 1 : 0);
+        if (score > best) { best = score; nv = v; }
+      }
+    }
+    if (!nv) return;
+    // the old voice holds its note and its effort, drifts to one side, and fades out (or holds, with trail 0)
+    old.tgtLogF = old.logF; old.fadeAt = 0; old.fadeLen = this.trail > 0 ? Math.max(1, Math.round(this.trail * this.sr)) : Infinity;
+    old.panT = old.person ? 0.25 : -0.25;
+    // the new voice starts at once on the same note, at the same effort, and drifts to the other side
+    if (nv.mode !== this.mode || nv.P !== this.P) nv.setPreset(this.mode, this.P);
+    nv.reset(); nv.on = true;
+    nv.logF = nv.tgtLogF = old.logF; nv.gainT = old.gainT; nv.gain = old.gain; nv.fg = old.fg;
+    nv.bow.setF(Math.exp(nv.logF));
+    nv.pan = old.pan; nv.panT = -old.panT;
+    if (this.mode === 1) nv.chiff = 0.6;
+    this.active = nv;
+  }
+  process(inputs, outputs) {
+    const out = outputs[0], L = out[0], R = out[1] || out[0], n = L.length, pool = this.pool;
+    let fading = 0;
+    for (const v of pool) if (v.on && v.fadeAt >= 0) fading++;
+    if (!fading) this.active.panT = 0;   // alone again, so back to the centre
+    for (let i = 0; i < n; i++) {
+      let l = 0, r = 0;
+      for (let k = 0; k < pool.length; k++) {
+        const v = pool[k];
+        if (!v.on) continue;
+        v.pan += (v.panT - v.pan) * this.panK;
+        const y = v.tick(this.glideK) * 1.4;
+        // constant-power pan, so drifting to one side does not make the voice louder
+        const th = (v.pan + 1) * Math.PI / 4;
+        l += y * Math.SQRT2 * Math.cos(th); r += y * Math.SQRT2 * Math.sin(th);
+      }
+      L[i] = l; R[i] = r;
+    }
+    return true;
+  }
+}
+
+class TanpuraProc extends AudioWorkletProcessor {
+  constructor() {
+    super();
+    const sr = this.sr = sampleRate;
+    this.str = [0, 1, 2, 3].map(() => { const s = new WGString(sr); s.a = 0.12; s.t60 = 10; s.jaw = 0.03; return s; });
+    this.on = false; this.sa = 130.81; this.first = 0.75; this.speed = 1;
+    this.next = 0; this.idx = 0;
+    this.gaps = [1.05, 0.95, 0.95, 1.75];
+    this.amps = [0.55, 0.45, 0.45, 0.6];
+    this.pan = [-0.45, 0.2, -0.05, 0.45];
+    this.tune();
+    this.port.onmessage = (e) => this.onMsg(e.data);
+  }
+  tune() {
+    const f = [this.sa * this.first, this.sa * 1.0007, this.sa * 0.9994, this.sa * 0.5];
+    for (let i = 0; i < 4; i++) this.str[i].setF(f[i]);
+  }
+  onMsg(m) {
+    if (m.sa) this.sa = m.sa;
+    if (m.first) this.first = m.first;
+    if (m.speed && m.speed !== this.speed) { this.next = Math.round(this.next * m.speed / this.speed); this.speed = m.speed; }
+    this.tune();
+    if (m.on !== undefined && m.on !== this.on) {
+      this.on = m.on;
+      if (this.on) { this.next = 0; this.idx = 0; for (const s of this.str) s.damp = 1; }
+      else for (const s of this.str) s.damp = 0.97;
+    }
+  }
+  process(inputs, outputs) {
+    const out = outputs[0], L = out[0], R = out[1] || out[0], n = L.length;
+    for (let i = 0; i < n; i++) {
+      if (this.on && --this.next <= 0) {
+        const k = this.idx, s = this.str[k];
+        s.damp = 1; s.dampS = 1;
+        s.pluck(this.amps[k] * (0.92 + 0.16 * Math.random()), 0.0025, 0.27, 0.08);
+        this.next = Math.round(this.gaps[k] * this.speed * (0.97 + 0.06 * Math.random()) * this.sr);
+        this.idx = (k + 1) % 4;
+      }
+      let l = 0, r = 0;
+      for (let k = 0; k < 4; k++) {
+        const v = this.str[k].tick(0), p = this.pan[k];
+        l += v * (1 - p); r += v * (1 + p);
+      }
+      L[i] = l * 0.8; R[i] = r * 0.8;
+    }
+    return true;
+  }
+}
+
+registerProcessor('melody', MelodyProc);
+registerProcessor('tanpura', TanpuraProc);
+</script>
+
+<!-- ===================== App ===================== -->
+<script>
+'use strict';
+const NOTE = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const SWARA = ['Sa','re','Re','ga','Ga','Ma','Ma','Pa','dha','Dha','ni','Ni'];
+const KOMAL = [0,1,0,1,0,0,0,0,1,0,1,0];
+// Default shruti for each swara (5-limit just ratios), in cents above Sa.
+const JUST = [0,111.73,203.91,315.64,386.31,498.04,590.22,701.96,813.69,884.36,996.09,1088.27];
+// Thaat-specific shruti after common Hindustani practice. Only the swaras that differ from JUST are listed.
+// 90.22 = 256/243, 294.13 = 32/27, 611.73 = 729/512, 792.18 = 128/81 (the "ati komal" and "tivratar" shrutis).
+const SHRUTI = {
+  Bhairav:  { 1: 90.22, 8: 792.18 },
+  Bhairavi: { 1: 90.22, 3: 294.13, 8: 792.18 },
+  Todi:     { 1: 90.22, 3: 294.13, 6: 611.73, 8: 792.18 },
+  Asavari:  { 3: 294.13, 8: 792.18 },
+};
+const THAATS = {
+  Bilawal:[0,2,4,5,7,9,11], Kalyan:[0,2,4,6,7,9,11], Khamaj:[0,2,4,5,7,9,10], Kafi:[0,2,3,5,7,9,10],
+  Asavari:[0,2,3,5,7,8,10], Bhairavi:[0,1,3,5,7,8,10], Bhairav:[0,1,4,5,7,8,11], Purvi:[0,1,4,6,7,8,11],
+  Marwa:[0,1,4,6,7,9,11], Todi:[0,1,3,6,7,8,11], 'Khamaj (both ni)':[0,2,4,5,7,9,10,11], Chromatic:[0,1,2,3,4,5,6,7,8,9,10,11]
+};
+const C_MIN = -790, C_MAX = 1990;   // horizontal range in cents relative to madhya Sa (open Ma is about -700)
+const S_MIN = C_MIN / 100, S_MAX = C_MAX / 100;
+const FADE_MS = 14000, BAND_HALF = 15;   // half-height of the baseline band in px. Inside it the pitch does not bend.
+// Tone presets.
+// Bowed strings: pole = string damping (higher is darker), beta = bow position as a fraction of the string,
+// body = the instrument body as filters [type, Hz, Q, dB]. Voices: oq0 and oqE set how open the glottis is and how much
+// that changes with pressure, tn is the closing share of the open phase (smaller is brighter), asp is the breathiness,
+// jit and shim are cycle-to-cycle pitch and level variation, flow mixes in the glottal flow for a stronger fundamental,
+// body adds brightness filters, and formants names a set in AA_FORMANTS.
+const TONES = {
+  cello:  { label: 'Cello', mode: 0, oct: 0, preset: { pole: 0.7, beta: 0.11, out: 0.65,
+            body: [['hp', 55, 0.7, 0], ['peak', 110, 2.5, 5], ['peak', 200, 4, 6], ['peak', 400, 3, 4], ['peak', 900, 1.5, -3], ['peak', 1900, 1.2, 5], ['hs', 4000, 0.7, -9]] } },
+  violin: { label: 'Violin', mode: 0, oct: 1, preset: { pole: 0.62, beta: 0.127, out: 0.8,
+            body: [['hp', 190, 0.7, 0], ['peak', 280, 3, 6], ['peak', 470, 5, 5], ['peak', 560, 5, 4], ['peak', 1300, 1.5, -4], ['peak', 2700, 1.3, 7], ['hs', 5500, 0.7, -9]] } },
+  voice:  { label: 'Voice (male)', mode: 2, oct: 0, preset: { out: 0.28, oq0: 0.72, oqE: 0.27, asp: 1 }, formants: 'male' },
+  voiceF: { label: 'Voice (female)', mode: 2, oct: 1, formants: 'female',
+            preset: { out: 0.14, lvl: 0.6, oq0: 0.8, oqE: 0.2, tn: 0.23, asp: 1.2, jit: 0.0012, shim: 0.02, flow: 1.8,
+                      body: [['hp', 160, 0.6, 0], ['hs', 2200, 0.7, 10], ['peak', 3050, 1.2, 5], ['hs', 5500, 0.7, -10]] } },
+  flute:  { label: 'Flute', mode: 1, oct: 1, preset: {} },
+};
+// Formants (Hz, bandwidth) of the sung vowel "aa". The female voice sings one octave above the board.
+const AA_FORMANTS = {
+  male:   [[720, 70], [1150, 90], [2550, 140], [3400, 220], [4000, 300]],
+  female: [[1000, 120], [1560, 150], [3050, 160], [4000, 260], [5000, 340]],
+};
+const TWO_PI = Math.PI * 2;
+
+// First-visit settings. Later visits restore what the visitor last used.
+const DEFAULTS = { saPc:0, saOct:3, thaat:'Bilawal', tone:'voice', snap:false, geo:true, tuning:'shruti', theme:'dark', pullPx:24, trail:3,
+  tanOn:false, tanFirst:'Pa', tanVol:0.5, tanSpeed:1, vol:0.7, fade:true };
+let S = Object.assign({}, DEFAULTS);
+try { Object.assign(S, JSON.parse(localStorage.getItem('meendpad2') || '{}')); } catch (e) {}
+if (!THAATS[S.thaat]) S.thaat = 'Bilawal';
+if (!TONES[S.tone]) S.tone = 'voice';
+const save = () => { try { localStorage.setItem('meendpad2', JSON.stringify(S)); } catch (e) {} };
+
+// ---------- pitch helpers ----------
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+const saMidi = () => 12 * (S.saOct + 1) + S.saPc;
+const saHz = () => 440 * Math.pow(2, (saMidi() - 69) / 12);
+function cOfPc(pc) {
+  if (S.tuning === 'equal') return pc * 100;
+  const t = SHRUTI[S.thaat];
+  return t && t[pc] !== undefined ? t[pc] : JUST[pc];
+}
+const noteC = (oct, pc) => oct * 1200 + cOfPc(pc);
+const toneOct = () => TONES[S.tone].oct;   // violin, female voice and flute sound one octave up
+const freqOf = c => saHz() * Math.pow(2, c / 1200 + toneOct());
+const hueOf = c => (35 + (((c % 1200) + 1200) % 1200) / 1200 * 360) % 360;
+// Canvas colours for each theme. dL shifts note colours darker on the light board so they stay readable.
+const PALETTES = {
+  dark:  { bg: '#17130f', board: ['#2f241c', '#271e17'], edge: '#3d3229', grain: '#d8b48a', grainA: 0.05, ink: '236,226,212',
+           band: '255,238,210', nut: '#e8dcc4', shine: 'rgba(255,240,210,.35)', scrim: 'rgba(14,11,8,.55)', accent: '#d9a441',
+           dL: 0, sat: 80, good: '#8fd18a', warn: '#e8c46a', mute: '#a29482' },
+  light: { bg: '#e9e3d8', board: ['#e6d4b2', '#dcc6a0'], edge: '#b9a17e', grain: '#6b4a2b', grainA: 0.08, ink: '40,30,20',
+           band: '70,40,10', nut: '#3b2f25', shine: 'rgba(255,255,255,.5)', scrim: 'rgba(240,234,224,.72)', accent: '#9a6510',
+           dL: -28, sat: 72, good: '#2f8a3a', warn: '#a7790e', mute: '#6c5e4f' },
+};
+let PAL = PALETTES.dark;
+const ink = a => `rgba(${PAL.ink},${a})`;
+const colOf = (c, l = 62, a = 1) => `hsla(${hueOf(c).toFixed(1)},${PAL.sat}%,${l + PAL.dL}%,${a})`;
+function applyTheme() {
+  let t = S.theme;
+  if (t !== 'light' && t !== 'dark') t = window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  document.documentElement.dataset.theme = t; PAL = PALETTES[t];
+  return t;
+}
+
+let frets = [], ghosts = [];
+function buildFrets() {
+  const sc = THAATS[S.thaat], open = noteC(-1, 5), top = noteC(1, 7) + 1;
+  frets = [{ c: open, pc: 5, oct: -1, open: true }];
+  ghosts = [];
+  for (let o = -1; o <= 1; o++) for (let pc = 0; pc < 12; pc++) {
+    const c = noteC(o, pc);
+    if (c <= open + 20 || c > top + 60) continue;
+    if (sc.includes(pc)) { if (c <= top) frets.push({ c, pc, oct: o }); }
+    else ghosts.push({ c, pc, oct: o });
+  }
+  frets.sort((a, b) => a.c - b.c);
+}
+
+// ---------- audio ----------
+let actx = null, melody = null, tanpura = null, melGain, tanGain, audioReady = false, engine = '';
+function send(m) { if (melody) melody.port.postMessage(m); }
+const elAs = document.getElementById('astat');
+function setStatus(text, cls) { elAs.textContent = text; elAs.className = cls || ''; }
+
+// Chrome will not load an AudioWorklet module into a page opened from a file path.
+// In that case the same DSP code runs inside ScriptProcessor nodes, which work everywhere
+// at the cost of roughly 10 ms of extra latency.
+function makeScriptNode(ctx, Proc) {
+  const proc = new Proc();
+  const sp = ctx.createScriptProcessor(512, 0, 2);
+  sp.onaudioprocess = (e) => {
+    const L = e.outputBuffer.getChannelData(0), R = e.outputBuffer.getChannelData(1);
+    for (let i = 0; i < L.length; i += 128) proc.process([], [[L.subarray(i, i + 128), R.subarray(i, i + 128)]]);
+  };
+  sp.port = { postMessage: (m) => proc.port.onmessage({ data: m }) };
+  return sp;
+}
+function scriptEngine(ctx, src) {
+  const procs = {};
+  class Shim { constructor() { this.port = { onmessage: null, postMessage() {} }; } }
+  new Function('sampleRate', 'AudioWorkletProcessor', 'registerProcessor', src)(ctx.sampleRate, Shim, (n, c) => { procs[n] = c; });
+  return { m: makeScriptNode(ctx, procs.melody), t: makeScriptNode(ctx, procs.tanpura) };
+}
+function makeIR(ctx, dur) {
+  const sr = ctx.sampleRate, n = Math.floor(sr * dur), ir = ctx.createBuffer(2, n, sr), pre = Math.floor(0.018 * sr);
+  for (let ch = 0; ch < 2; ch++) {
+    const d = ir.getChannelData(ch); let lp = 0;
+    for (let i = pre; i < n; i++) {
+      const t = (i - pre) / sr, k = 0.25 + 0.6 * Math.min(1, t / dur);
+      lp = lp * k + (Math.random() * 2 - 1) * (1 - k);
+      d[i] = lp * Math.exp(-6.9 * t / dur) * 1.6;
+    }
+  }
+  return ir;
+}
+async function initAudio() {
+  if (actx) { if (actx.state !== 'running') actx.resume(); return; }
+  setStatus('audio starting');
+  try {
+    actx = new AudioContext({ latencyHint: 'interactive' });
+  } catch (e) { setStatus('no Web Audio', 'bad'); return; }
+  const src = document.getElementById('worklet-src').textContent;
+  try {
+    if (location.protocol === 'file:' || !actx.audioWorklet) throw new Error('worklet unavailable');
+    const url = URL.createObjectURL(new Blob([src], { type: 'application/javascript' }));
+    await actx.audioWorklet.addModule(url);
+    melody = new AudioWorkletNode(actx, 'melody', { numberOfInputs: 0, outputChannelCount: [2] });
+    tanpura = new AudioWorkletNode(actx, 'tanpura', { numberOfInputs: 0, outputChannelCount: [2] });
+    engine = 'worklet';
+  } catch (e) {
+    const se = scriptEngine(actx, src);
+    melody = se.m; tanpura = se.t; engine = 'compat';
+  }
+  const hp = actx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 38;
+  melGain = actx.createGain(); tanGain = actx.createGain();
+  const master = actx.createGain(); master.gain.value = 0.9;
+  const comp = actx.createDynamicsCompressor();
+  comp.threshold.value = -12; comp.knee.value = 8; comp.ratio.value = 6; comp.attack.value = 0.004; comp.release.value = 0.25;
+  const rev = actx.createConvolver(); rev.buffer = makeIR(actx, 2.6);
+  const revSend = actx.createGain(); revSend.gain.value = 0.2;
+  melody.connect(hp).connect(melGain).connect(master);
+  tanpura.connect(tanGain).connect(master);
+  melGain.connect(revSend); tanGain.connect(revSend); revSend.connect(rev).connect(master);
+  master.connect(comp).connect(actx.destination);
+  audioReady = true;
+  actx.onstatechange = showAudioState;
+  showAudioState();
+  applyAudio();
+}
+function showAudioState() {
+  if (!actx || !audioReady) return;
+  if (actx.state === 'running') setStatus(engine === 'worklet' ? 'audio on' : 'audio on (file mode)', 'ok');
+  else setStatus('click to enable audio', 'bad');
+}
+function applyGains() {
+  if (!audioReady) return;
+  const t = actx.currentTime;
+  melGain.gain.setTargetAtTime(S.vol * 1.25, t, 0.03);
+  tanGain.gain.setTargetAtTime(S.tanVol * 0.9, t, 0.05);
+}
+function applyAudio() {
+  if (!audioReady) return;
+  applyGains();
+  const T = TONES[S.tone], preset = Object.assign({}, T.preset);
+  if (T.mode === 2) preset.formants = AA_FORMANTS[T.formants];
+  send({ type: 'mode', mode: T.mode, preset });
+  send({ type: 'trail', trail: trailHold() ? 0 : S.trail });
+  const first = { Pa: 0.75, Ma: 2 / 3, Ni: 15 / 16 }[S.tanFirst];
+  tanpura.port.postMessage({ sa: saHz(), first, on: S.tanOn, speed: 1 / S.tanSpeed });
+}
+
+// ---------- geometry ----------
+// "Geometric" spacing places frets where they sit on a real string (distance from the nut is 1 - 2^(-semitones/12)),
+// so higher frets crowd together. "Equal" gives every semitone the same width.
+const cv = document.getElementById('cv'), g = cv.getContext('2d');
+const bg = document.createElement('canvas'), bgx = bg.getContext('2d');
+let W = 0, H = 0, dpr = 1, box = { x: 0, y: 0, w: 0, h: 0 }, bandY = 0, rect = null;
+const uOf = s => S.geo ? 1 - Math.pow(2, -(s - S_MIN) / 12) : (s - S_MIN) / (S_MAX - S_MIN);
+const xOf = c => box.x + box.w * uOf(c / 100) / uOf(S_MAX);
+function cOf(x) {
+  const u = clamp((x - box.x) / box.w, 0, 1) * uOf(S_MAX);
+  return 100 * (S.geo ? S_MIN - 12 * Math.log2(1 - u) : S_MIN + u * (S_MAX - S_MIN));
+}
+// Vertical scale of the meend, the same on every fret. It follows the fret spacing setting.
+// Equal: every semitone of pull takes the same pen travel (Depth px).
+// Geometric: the same law as the frets, distance = A * (1 - 2^(-semitones/12)), so each further semitone takes a little
+// less travel and the step halves every octave. The first semitone still takes Depth px.
+const vA = () => S.pullPx / (1 - Math.pow(2, -1 / 12));
+const dOfSemi = k => S.geo ? vA() * (1 - Math.pow(2, -k / 12)) : k * S.pullPx;
+const semiOfD = d => S.geo ? -12 * Math.log2(1 - Math.min(d / vA(), 0.995)) : d / S.pullPx;
+// The pull reaches as many semitones as fit between the band and the board's edge.
+const meendMax = () => clamp(semiOfD(box.h / 2 - BAND_HALF - 2), 1, 48);
+
+function layout() {
+  rect = cv.getBoundingClientRect(); dpr = window.devicePixelRatio || 1;
+  W = rect.width; H = rect.height;
+  for (const c of [cv, bg]) { c.width = Math.round(W * dpr); c.height = Math.round(H * dpr); }
+  // In fullscreen the band sits at the screen's vertical centre, which is the tablet's centre when it is mapped to the monitor.
+  const band = document.fullscreenElement ? screen.height / 2 - rect.top : H / 2;
+  bandY = clamp(band, 110, Math.max(110, H - 110));
+  const half = Math.max(50, Math.min(bandY - 54, H - 50 - bandY));
+  box = { x: 20, y: bandY - half, w: W - 40, h: 2 * half };
+  drawBg();
+}
+
+function uiFont(weight, size) {
+  return `${weight} ${size}px ${getComputedStyle(document.documentElement).getPropertyValue('--font-ui')}`;
+}
+function drawSwara(c2, pc, oct, x, y, color, size) {
+  c2.font = uiFont(600, size);
+  c2.textAlign = 'center'; c2.textBaseline = 'alphabetic'; c2.fillStyle = color;
+  c2.fillText(SWARA[pc], x, y);
+  const w = c2.measureText(SWARA[pc]).width;
+  c2.strokeStyle = color; c2.lineWidth = 1.2;
+  if (KOMAL[pc]) { c2.beginPath(); c2.moveTo(x - w / 2, y + 3); c2.lineTo(x + w / 2, y + 3); c2.stroke(); }
+  if (pc === 6) { c2.beginPath(); c2.moveTo(x, y - size * 0.95); c2.lineTo(x, y - size * 1.35); c2.stroke(); }
+  if (oct < 0) { c2.beginPath(); c2.arc(x, y + 8, 1.8, 0, TWO_PI); c2.fill(); }
+  if (oct > 0) { c2.beginPath(); c2.arc(x, y - size - (pc === 6 ? 9 : 4), 1.8, 0, TWO_PI); c2.fill(); }
+}
+
+function drawBg() {
+  const c2 = bgx; c2.setTransform(dpr, 0, 0, dpr, 0, 0);
+  c2.fillStyle = PAL.bg; c2.fillRect(0, 0, W, H);
+  const grd = c2.createLinearGradient(0, box.y, 0, box.y + box.h);
+  grd.addColorStop(0, PAL.board[0]); grd.addColorStop(0.5, PAL.board[1]); grd.addColorStop(1, PAL.board[0]);
+  c2.fillStyle = grd; c2.beginPath(); c2.roundRect(box.x, box.y, box.w, box.h, 6); c2.fill();
+  c2.strokeStyle = PAL.edge; c2.lineWidth = 1; c2.stroke();
+  // wood grain
+  c2.globalAlpha = PAL.grainA; c2.strokeStyle = PAL.grain;
+  for (let i = 0; i < 22; i++) {
+    const y = box.y + (i + 0.5) / 22 * box.h; c2.beginPath(); c2.moveTo(box.x + 4, y);
+    for (let x = box.x; x <= box.x + box.w; x += 40) c2.lineTo(x, y + Math.sin(x * 0.006 + i * 1.7) * 3);
+    c2.stroke();
+  }
+  c2.globalAlpha = 1;
+  // meend guides, one faint line per semitone of pull, mirrored above and below the band
+  c2.font = `10px ${getComputedStyle(document.documentElement).getPropertyValue('--font-num')}`;
+  c2.textAlign = 'left'; c2.textBaseline = 'middle';
+  const K = Math.floor(meendMax());
+  let lastLabel = 0;
+  for (let k = 1; k <= K; k++) {
+    const d = dOfSemi(k), oct = k % 12 === 0;
+    if (d - dOfSemi(k - 1) < 3 && !oct) continue;   // too dense to draw
+    const label = oct || d - lastLabel >= 13;
+    if (label) lastLabel = d;
+    for (const s of [-1, 1]) {
+      const y = bandY + s * (BAND_HALF + d);
+      c2.strokeStyle = ink(oct ? 0.16 : k % 5 === 0 ? 0.1 : 0.06);
+      c2.setLineDash(oct ? [6, 6] : [2, 6]);
+      c2.beginPath(); c2.moveTo(box.x + 26, y); c2.lineTo(box.x + box.w - 4, y); c2.stroke();
+      if (label) { c2.fillStyle = ink(0.34); c2.fillText((s < 0 ? '+' : '−') + k, box.x + 5, y); }
+    }
+  }
+  c2.setLineDash([]);
+  // baseline band
+  c2.fillStyle = `rgba(${PAL.band},.1)`; c2.fillRect(box.x, bandY - BAND_HALF, box.w, 2 * BAND_HALF);
+  c2.strokeStyle = `rgba(${PAL.band},.28)`;
+  c2.beginPath(); c2.moveTo(box.x, bandY - BAND_HALF + 0.5); c2.lineTo(box.x + box.w, bandY - BAND_HALF + 0.5);
+  c2.moveTo(box.x, bandY + BAND_HALF - 0.5); c2.lineTo(box.x + box.w, bandY + BAND_HALF - 0.5); c2.stroke();
+  // notes left out by the thaat
+  const fx = frets.map(f => xOf(f.c));
+  for (const gh of ghosts) {
+    const x = xOf(gh.c); if (x > box.x + box.w) continue;
+    c2.strokeStyle = ink(.17); c2.lineWidth = 1;
+    c2.beginPath(); c2.moveTo(x, box.y + 14); c2.lineTo(x, box.y + box.h - 14); c2.stroke();
+    let room = 1e9; for (const v of fx) room = Math.min(room, Math.abs(v - x));
+    if (room > 20) drawSwara(c2, gh.pc, gh.oct, x, box.y - 16, ink(.32), 10);
+  }
+  // meend ticks for every fret, faint
+  for (const f of frets) fretTicks(c2, f, PAL === PALETTES.light ? 0.38 : 0.3);
+  // frets
+  const numFont = getComputedStyle(document.documentElement).getPropertyValue('--font-num');
+  frets.forEach((f, i) => {
+    const x = fx[i], strong = f.pc === 0 || f.pc === 7;
+    const gap = Math.min(i > 0 ? x - fx[i - 1] : 99, i < fx.length - 1 ? fx[i + 1] - x : 99);
+    if (f.open) {
+      c2.fillStyle = PAL.nut; c2.fillRect(x - 3, box.y + 4, 6, box.h - 8);
+    } else {
+      c2.strokeStyle = colOf(f.c, 62, 0.6); c2.lineWidth = strong ? 5 : 3;
+      c2.beginPath(); c2.moveTo(x, box.y + 10); c2.lineTo(x, box.y + box.h - 10); c2.stroke();
+      c2.strokeStyle = PAL.shine; c2.lineWidth = 1;
+      c2.beginPath(); c2.moveTo(x - 0.5, box.y + 10); c2.lineTo(x - 0.5, box.y + box.h - 10); c2.stroke();
+    }
+    const size = clamp(Math.round(gap * 0.42), 10, 16) + (strong && gap > 34 ? 1 : 0);
+    drawSwara(c2, f.pc, f.oct, x, box.y - 16, colOf(f.c, 70), size);
+    // Western name below, plus how far this shruti sits from equal temperament
+    const et = Math.round(f.c / 100), dev = Math.round(f.c - et * 100);
+    c2.font = `${gap < 26 ? 9 : 11}px ${numFont}`; c2.textAlign = 'center'; c2.textBaseline = 'alphabetic';
+    c2.fillStyle = ink(.6);
+    c2.fillText(NOTE[(((saMidi() + et) % 12) + 12) % 12], x, box.y + box.h + 16);
+    if (dev !== 0 && gap >= 24) {
+      c2.font = `9px ${numFont}`; c2.fillStyle = ink(.4);
+      c2.fillText((dev > 0 ? '+' : '−') + Math.abs(dev), x, box.y + box.h + 29);
+    }
+    if (f.open) { c2.font = `9px ${numFont}`; c2.fillStyle = ink(.4); c2.fillText('open', x, box.y + box.h + 40); }
+  });
+}
+
+// ---------- strokes and pointer ----------
+let strokes = [], stroke = null, hover = null, live = null, livePressure = 0, livePtype = '';
+// Echo markers, one per echo, fading over the trail time at the spot where the held voice was left.
+// The far right of the trail slider means hold. A held echo sounds until Space is pressed with the pen lifted.
+let echoes = [];
+const trailHold = () => S.trail >= 12.5;
+function echo() {
+  if (!stroke || !live) {   // pen lifted, so Space releases the held and fading echoes
+    if (echoes.length) { send({ type: 'release' }); const now = performance.now(); for (const m of echoes) if (!m.rel) m.rel = now; }
+    return;
+  }
+  send({ type: 'echo' });
+  echoes.push({ x: live.x, y: live.y, c: live.c, t: performance.now(), T: trailHold() ? Infinity : S.trail * 1000 });
+}
+// Pen pressure moves the level around the slider's base volume (about 1.0 at half pressure).
+// Mouse and touch play at the base volume.
+const pressureGain = p => 0.12 + 1.6 * Math.pow(clamp(p, 0, 1), 0.9);
+function pressureOf(e) {
+  if (e.pointerType !== 'pen') return e.buttons ? 0.5 : 0;
+  return e.pressure > 0 ? e.pressure : (e.buttons ? 0.5 : 0);
+}
+const gainOf = (e, p) => e.pointerType === 'pen' ? pressureGain(p) : 0.86;
+
+function nearestFret(x, st) {
+  let best = frets[0], bd = 1e9;
+  for (const f of frets) { const d = Math.abs(x - xOf(f.c)); if (d < bd) { bd = d; best = f; } }
+  if (st && st.fret && st.fret !== best && frets.includes(st.fret) && Math.abs(x - xOf(st.fret.c)) < bd + 6) best = st.fret;
+  return best;
+}
+function evalPitch(x, y, st) {
+  let base, fret = null;
+  if (S.snap) { fret = nearestFret(x, st); base = fret.c; }
+  else base = Math.max(clamp(cOf(x), C_MIN, C_MAX), frets[0].c);
+  // Above the band raises the pitch, below it lowers the pitch, by the same scale, so height on the board reads as pitch.
+  const bend = (y < bandY ? 1 : -1) * clamp(semiOfD(Math.max(0, Math.abs(y - bandY) - BAND_HALF)), 0, meendMax()) * 100;
+  return { c: base + bend, base, bend, fret, x, y };
+}
+const glideT = () => S.snap ? 0.012 : 0.005;
+const local = e => ({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+
+cv.addEventListener('contextmenu', e => e.preventDefault());
+cv.addEventListener('pointerdown', e => {
+  e.preventDefault();
+  if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+  if (e.pointerType === 'pen' && (e.button === 5 || (e.buttons & 32))) { clearTrails(); return; }
+  if (e.button !== 0) return;
+  initAudio();
+  try { cv.setPointerCapture(e.pointerId); } catch (err) {}
+  const { x, y } = local(e), p = pressureOf(e);
+  stroke = { id: e.pointerId, x0: x, y0: y, pts: [], fret: null, buttons: e.buttons };
+  const info = evalPitch(x, y, stroke); stroke.fret = info.fret;
+  stroke.pts.push({ x, y, p, c: info.c, t: performance.now() });
+  strokes.push(stroke);
+  live = info; livePressure = p; livePtype = e.pointerType;
+  send({ type: 'down', f: freqOf(info.c), gain: gainOf(e, p), glide: glideT(), vel: 0.9 });
+});
+cv.addEventListener('pointermove', e => {
+  const { x, y } = local(e);
+  hover = { x, y, type: e.pointerType }; livePtype = e.pointerType;
+  if (!stroke || e.pointerId !== stroke.id) { livePressure = 0; return; }
+  const added = e.buttons & ~stroke.buttons;
+  if (added & 6) echo();
+  stroke.buttons = e.buttons;
+  const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [];
+  let info = null, p = 0;
+  for (const ce of (evs.length ? evs : [e])) {
+    const q = local(ce); p = pressureOf(ce);
+    info = evalPitch(q.x, q.y, stroke); stroke.fret = info.fret;
+    stroke.pts.push({ x: q.x, y: q.y, p, c: info.c, t: performance.now() });
+  }
+  live = info; livePressure = p;
+  send({ type: 'ctl', f: freqOf(info.c), gain: gainOf(e, p), glide: glideT() });
+});
+function endStroke(e) {
+  if (!stroke || e.pointerId !== stroke.id) return;
+  send({ type: 'up' }); stroke.done = true; stroke = null; live = null; livePressure = 0;
+  if (actx && actx.state !== 'running') actx.resume();
+}
+cv.addEventListener('pointerup', endStroke);
+cv.addEventListener('pointercancel', endStroke);
+cv.addEventListener('pointerleave', () => { if (!stroke) hover = null; });
+['pointerup', 'keydown'].forEach(t => document.addEventListener(t, () => { if (actx && actx.state !== 'running') actx.resume(); }));
+
+// X, the Clear button and the eraser clear the trails and quickly stop any echoes still sounding.
+// The voice under the pen keeps playing.
+function clearTrails() {
+  strokes = stroke ? [stroke] : []; if (stroke) stroke.pts = stroke.pts.slice(-1);
+  if (echoes.length) { send({ type: 'release', time: 0.15 }); echoes = []; }
+}
+
+// ---------- render loop ----------
+function frame() {
+  const now = performance.now();
+  g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(bg, 0, 0); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if (S.fade) {
+    for (const s of strokes) if (s.pts.length > 1 && now - s.pts[0].t > FADE_MS) {
+      let k = 0; while (k < s.pts.length - 1 && now - s.pts[k].t > FADE_MS) k++; s.pts = s.pts.slice(k);
+    }
+    strokes = strokes.filter(s => !s.done || (s.pts.length && now - s.pts[s.pts.length - 1].t < FADE_MS));
+  } else {
+    let total = 0; for (const s of strokes) total += s.pts.length;
+    while (total > 40000 && strokes.length > 1) total -= strokes.shift().pts.length;
+  }
+  const ref = live || (hover ? evalPitch(hover.x, hover.y, null) : null);
+  // highlight the fret that is sounding, or would sound
+  if (ref && ref.fret && !ref.fret.open) {
+    const x = xOf(ref.fret.c);
+    g.strokeStyle = colOf(ref.fret.c, 70, live ? 0.95 : 0.6); g.lineWidth = 6;
+    g.beginPath(); g.moveTo(x, box.y + 10); g.lineTo(x, box.y + box.h - 10); g.stroke();
+  }
+  // trails
+  g.lineCap = 'round'; g.lineJoin = 'round';
+  for (const s of strokes) {
+    const P = s.pts;
+    for (let i = 1; i < P.length; i++) {
+      const a = P[i - 1], b = P[i];
+      const al = S.fade ? clamp(1 - (now - b.t) / FADE_MS, 0, 1) : 1;
+      if (al <= 0) continue;
+      g.strokeStyle = colOf(b.c, 62, al); g.lineWidth = 1.5 + (a.p + b.p) * 5;
+      g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(b.x, b.y); g.stroke();
+    }
+    if (P.length && P[0].x === s.x0) {
+      const al = S.fade ? clamp(1 - (now - P[0].t) / FADE_MS, 0, 1) : 1;
+      if (al > 0) { g.fillStyle = ink(0.7 * al); g.beginPath(); g.arc(s.x0, s.y0, 3.5, 0, TWO_PI); g.fill(); }
+    }
+  }
+  // echo markers: a ring in the echoed note's colour that shrinks and fades with the voice it marks
+  echoes = echoes.filter(m => now - m.t < m.T && !(m.rel && now - m.rel > 800));
+  for (const m of echoes) {
+    const k = (now - m.t) / m.T, a = (1 - k) * (m.rel ? 1 - (now - m.rel) / 800 : 1);
+    g.lineWidth = 2.5; g.strokeStyle = colOf(m.c, 62, 0.9 * a);
+    if (m.T === Infinity) g.setLineDash([5, 4]);   // held echoes are dashed
+    g.beginPath(); g.arc(m.x, m.y, 9 + 9 * a, 0, TWO_PI); g.stroke(); g.setLineDash([]);
+  }
+  // the held fret's meend ticks brighten in place
+  if (live && live.fret) fretTicks(g, live.fret, 0.9);
+  // Pen cursor. The browser shows no pointer for a hovering pen here, so draw a ring at the tip.
+  if (hover && hover.type === 'pen') {
+    g.lineWidth = 1.5; g.strokeStyle = ink(stroke ? 0.5 : 0.85);
+    g.beginPath(); g.arc(hover.x, hover.y, 7, 0, TWO_PI); g.stroke();
+    g.fillStyle = ink(0.9); g.beginPath(); g.arc(hover.x, hover.y, 1.6, 0, TWO_PI); g.fill();
+  }
+  updateReadout();
+  requestAnimationFrame(frame);
+}
+// Static meend grid. Short ticks centred on each fret mark the heights of the swaras reachable from that fret,
+// higher swaras above the band and lower swaras below it, coloured like those swaras. The semitone scale is the same on every fret,
+// but the swaras land on different semitones from each fret (Ga to Ma is one semitone, Sa to Re is two), so the
+// swara marks belong to each fret rather than running across the whole board.
+function fretTicks(c2, f, alpha) {
+  const i = frets.indexOf(f), x = xOf(f.c), reach = meendMax() * 100 + 1;
+  const left = i > 0 ? x - xOf(frets[i - 1].c) : 60, right = i < frets.length - 1 ? xOf(frets[i + 1].c) - x : 60;
+  const hw = clamp(0.32 * Math.min(left, right), 5, 22);
+  const sc = THAATS[S.thaat], o0 = Math.floor(f.c / 1200);
+  c2.lineWidth = 2;
+  for (let o = o0 - 3; o <= o0 + 3; o++) for (const pc of sc) {
+    const c = noteC(o, pc), dc = c - f.c;
+    if (Math.abs(dc) <= 10 || Math.abs(dc) > reach) continue;
+    const y = bandY - Math.sign(dc) * (BAND_HALF + dOfSemi(Math.abs(dc) / 100));
+    c2.strokeStyle = colOf(c, 62, alpha);
+    c2.beginPath(); c2.moveTo(x - hw, y); c2.lineTo(x + hw, y); c2.stroke();
+  }
+}
+const elPb = document.querySelector('#pbar>i'), elPt = document.getElementById('ptype');
+function updateReadout() {
+  const pen = livePtype === 'pen';
+  elPb.style.width = (pen ? clamp(livePressure, 0, 1) * 100 : 0).toFixed(0) + '%';
+  const t = !livePtype ? 'pressure' : pen ? 'pen pressure' : `${livePtype}, no pressure`;
+  if (elPt.textContent !== t) elPt.textContent = t;
+}
+
+// ---------- controls ----------
+function seg(id, opts, key) {
+  const el = document.getElementById(id); el.innerHTML = '';
+  for (const [label, val] of opts) {
+    const b = document.createElement('button'); b.textContent = label;
+    b.onclick = () => { S[key] = val; save(); refresh(); b.blur(); };
+    b.dataset.val = JSON.stringify(val); el.appendChild(b);
+  }
+}
+function markSeg(id, val) {
+  for (const b of document.getElementById(id).children) b.classList.toggle('on', b.dataset.val === JSON.stringify(val));
+}
+seg('saNotes', NOTE.map((n, i) => [n, i]), 'saPc');
+seg('tone', Object.entries(TONES).map(([k, v]) => [v.label, k]), 'tone');
+[...document.getElementById('tone').children].forEach((b, i) => {
+  const kb = document.createElement('span'); kb.className = 'key'; kb.textContent = i + 1; b.appendChild(kb);
+  b.title = 'Key ' + (i + 1);
+});
+seg('snap', [['Snap', true], ['Free', false]], 'snap');
+seg('geo', [['Equal', false], ['Geometric', true]], 'geo');
+seg('tuning', [['Shruti', 'shruti'], ['Equal', 'equal']], 'tuning');
+seg('tanFirst', [['Pa', 'Pa'], ['Ma', 'Ma'], ['Ni', 'Ni']], 'tanFirst');
+seg('fade', [['Fade', true], ['Keep', false]], 'fade');
+seg('theme', [['Dark', 'dark'], ['Light', 'light']], 'theme');
+const thaatSel = document.getElementById('thaat');
+for (const k of Object.keys(THAATS)) { const o = document.createElement('option'); o.value = o.textContent = k; thaatSel.appendChild(o); }
+thaatSel.onchange = () => { S.thaat = thaatSel.value; save(); refresh(); thaatSel.blur(); };
+document.getElementById('octDn').onclick = () => { S.saOct = Math.max(1, S.saOct - 1); save(); refresh(); };
+document.getElementById('octUp').onclick = () => { S.saOct = Math.min(5, S.saOct + 1); save(); refresh(); };
+const tanBtn = document.getElementById('tanOn');
+tanBtn.onclick = () => { S.tanOn = !S.tanOn; save(); initAudio(); refresh(); };
+// Tanpura speed in steps of about 10 percent, from half to double the normal pace.
+// At 1x one round of the four strings takes 4.7 s.
+const TAN_STEPS = [0.5, 0.56, 0.62, 0.68, 0.75, 0.83, 0.91, 1, 1.1, 1.21, 1.33, 1.46, 1.61, 1.77, 2];
+function tanStep(dir) {
+  let i = TAN_STEPS.findIndex(v => v >= S.tanSpeed - 1e-6); if (i < 0) i = TAN_STEPS.length - 1;
+  S.tanSpeed = TAN_STEPS[clamp(i + dir, 0, TAN_STEPS.length - 1)]; save(); refresh();
+}
+document.getElementById('tanSlow').onclick = () => tanStep(-1);
+document.getElementById('tanFast').onclick = () => tanStep(1);
+for (const id of ['pullPx', 'tanVol', 'trail']) {
+  const el = document.getElementById(id); el.value = S[id];
+  el.oninput = () => { S[id] = parseFloat(el.value); save(); if (id === 'tanVol') applyGains(); else refresh(); };
+}
+document.getElementById('clear').onclick = clearTrails;
+
+// base volume slider (drag, scroll, or arrow keys)
+const volEl = document.getElementById('vol'), volVal = document.getElementById('volVal');
+function setVol(v) {
+  S.vol = clamp(v, 0, 1); save();
+  volEl.value = S.vol; volEl.style.setProperty('--p', (S.vol * 100).toFixed(1) + '%');
+  volVal.textContent = Math.round(S.vol * 100);
+  applyGains();
+}
+volEl.oninput = () => setVol(parseFloat(volEl.value));
+volEl.addEventListener('wheel', e => { e.preventDefault(); setVol(S.vol - Math.sign(e.deltaY) * 0.03); }, { passive: false });
+setVol(S.vol);
+
+function toggleFs() {
+  if (document.fullscreenElement) document.exitFullscreen();
+  else document.documentElement.requestFullscreen().catch(() => {});
+}
+document.getElementById('fs').onclick = toggleFs;
+const help = document.getElementById('help');
+document.getElementById('helpBtn').onclick = () => { help.hidden = false; };
+document.getElementById('startBtn').onclick = () => { help.hidden = true; initAudio(); };
+
+function refresh() {
+  markSeg('saNotes', S.saPc); markSeg('tone', S.tone); markSeg('snap', S.snap); markSeg('geo', S.geo);
+  markSeg('theme', applyTheme());
+  markSeg('tuning', S.tuning); markSeg('tanFirst', S.tanFirst); markSeg('fade', S.fade);
+  thaatSel.value = S.thaat;
+  document.getElementById('octVal').textContent = S.saOct;
+  document.getElementById('saHz').textContent = saHz().toFixed(1) + ' Hz';
+  document.getElementById('pullPxVal').textContent = S.pullPx + ' px';
+  document.getElementById('trailVal').textContent = trailHold() ? 'hold' : S.trail.toFixed(1) + ' s';
+  tanBtn.textContent = S.tanOn ? 'On' : 'Off'; tanBtn.classList.toggle('on', S.tanOn);
+  const tv = document.getElementById('tanVol'); tv.disabled = !S.tanOn; tv.previousElementSibling.classList.toggle('off', !S.tanOn);
+  const ts = document.getElementById('tanSpeedVal');
+  ts.textContent = S.tanSpeed.toFixed(2).replace(/0$/, '') + '×';
+  ts.title = 'One round of the four strings takes ' + (4.7 / S.tanSpeed).toFixed(1) + ' s';
+  for (const id of ['tanSlow', 'tanFast']) document.getElementById(id).disabled = !S.tanOn;
+  ts.previousElementSibling.previousElementSibling.classList.toggle('off', !S.tanOn);
+  buildFrets(); if (W) drawBg();
+  applyAudio();
+}
+
+// Capture phase, so these keys work even when a button or the thaat menu has keyboard focus.
+window.addEventListener('keydown', e => {
+  const k = e.key.toLowerCase();
+  // number keys 1 to 5 (top row or keypad) pick the tones in toolbar order
+  const dig = /^(?:Digit|Numpad)([1-9])$/.exec(e.code), toneKey = dig ? Object.keys(TONES)[+dig[1] - 1] : null;
+  const mine = e.code === 'Space' || k === 'x' || k === 't' || k === 'f' || !!toneKey;
+  if (!mine) {
+    if (e.key === 'Escape') {
+      help.hidden = true;
+    }
+    return;
+  }
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  e.preventDefault(); e.stopPropagation();
+  const ae = document.activeElement;
+  if (ae && ae !== document.body) ae.blur();
+  if (e.code === 'Space') { if (!e.repeat) echo(); }
+  else if (e.repeat) return;
+  else if (toneKey) { S.tone = toneKey; save(); refresh(); }
+  else if (k === 'x') clearTrails();
+  else if (k === 't') { S.tanOn = !S.tanOn; save(); initAudio(); refresh(); }
+  else if (k === 'f') toggleFs();
+}, true);
+if (window.matchMedia) matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => { refresh(); });
+new ResizeObserver(() => { layout(); refresh(); }).observe(document.getElementById('stage'));
+document.addEventListener('fullscreenchange', () => setTimeout(() => { layout(); refresh(); }, 60));
+
+refresh();
+layout();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
